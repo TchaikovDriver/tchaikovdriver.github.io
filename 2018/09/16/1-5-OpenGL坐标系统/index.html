@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>1.5 OpenGL坐标系统 | Endless August</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="OpenGL ES">
+    <meta name="description" content="1.6 OpenGL坐标系统[TOC] 一、概述我们曾经在《1.1 基本概念介绍》里，简单地展示过OpenGL里的坐标转换过程（这张图将会在后边被多次引用）：                                                                                              OpenGLCoordinateSystem">
+<meta name="keywords" content="OpenGL ES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.5 OpenGL坐标系统">
+<meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/index.html">
+<meta property="og:site_name" content="Endless August">
+<meta property="og:description" content="1.6 OpenGL坐标系统[TOC] 一、概述我们曾经在《1.1 基本概念介绍》里，简单地展示过OpenGL里的坐标转换过程（这张图将会在后边被多次引用）：                                                                                              OpenGLCoordinateSystem">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/orthographic_frustum.png">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/perspective_orthographic.png">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/perspective_frustum.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLpipeline.png">
+<meta property="og:updated_time" content="2018-09-16T12:32:06.750Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.5 OpenGL坐标系统">
+<meta name="twitter:description" content="1.6 OpenGL坐标系统[TOC] 一、概述我们曾经在《1.1 基本概念介绍》里，简单地展示过OpenGL里的坐标转换过程（这张图将会在后边被多次引用）：                                                                                              OpenGLCoordinateSystem">
+<meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">TchaikovDriver</h5>
+          <a href="mailto:c2359438@qq.com" title="c2359438@qq.com" class="mail">c2359438@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/TchaikovDriver" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">1.5 OpenGL坐标系统</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">1.5 OpenGL坐标系统</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-09-16T12:31:50.000Z" itemprop="datePublished" class="page-time">
+  2018-09-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-6-OpenGL坐标系统"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.6 OpenGL坐标系统</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、概述"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、-坐标系统"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、 坐标系统</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-Local-Space"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. Local Space</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-World-Space"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. World Space</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-View-Space"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">3. View Space</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-Clip-Space"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">4. Clip Space</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-1-正射投影-Orthographic-Projection"><span class="post-toc-number">1.2.4.1.</span> <span class="post-toc-text">4.1 正射投影 Orthographic Projection</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-2-透视投影-Perspective-Projection"><span class="post-toc-number">1.2.4.2.</span> <span class="post-toc-text">4.2 透视投影 Perspective Projection</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-Screen-Space"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">5. Screen Space</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、总结"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">三、总结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-1-5-OpenGL坐标系统"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">1.5 OpenGL坐标系统</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-16 20:31:50" datetime="2018-09-16T12:31:50.000Z"  itemprop="datePublished">2018-09-16</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-6-OpenGL坐标系统"><a href="#1-6-OpenGL坐标系统" class="headerlink" title="1.6 OpenGL坐标系统"></a>1.6 OpenGL坐标系统</h1><p>[TOC]</p>
+<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>我们曾经在《1.1 基本概念介绍》里，简单地展示过OpenGL里的坐标转换过程（这张图将会在后边被多次引用）：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>在Vertex Shader运行后，我们可见的所有顶点都会转变成标准化设备坐标（Normal Device Coordinate，简称NDC），换句话说，每个顶点的x，y，z坐标都在[-1, 1]区间内，不在这个区间内的坐标都将不可见。我们一般只需要指定一个坐标范围，然后在Vertex Shader中将范围内的坐标转换为NDC，最后这些NDC坐标在OpenGL中会被传给光栅器（Rasterizer），最终变为屏幕上的二维坐标，也就是像素。</p>
+<p>如图所示，将坐标转换为NDC，接着再转换成屏幕坐标的过程是分步进行的，类似于流水线（Pipeline）一样。将这个过程拆分成多个坐标系的转换过程有一个好，一些操作或者说变换在特定的坐标系里会更加易于进行。这些坐标系分别是：</p>
+<ul>
+<li>Local Space（Object Space），本地坐标空间</li>
+<li>World Space，世界坐标空间</li>
+<li>View Space（Eye Space），观察坐标空间</li>
+<li>Clip Space</li>
+<li>Screen Space</li>
+</ul>
+<p>在Vertex Shader中，一般顶点坐标是这样计算的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">layout (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line"></span><br><span class="line">uniform mat4 model;</span><br><span class="line">uniform mat4 view;</span><br><span class="line">uniform mat4 projection;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	gl_Position = projection * view * model * vec4(aPos, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，所有顶点是依次经过model，view和projection矩阵变换最后得到NDC坐标的。</p>
+<p>今天我们就详细讲讲这些坐标系统。</p>
+<h2 id="二、-坐标系统"><a href="#二、-坐标系统" class="headerlink" title="二、 坐标系统"></a>二、 坐标系统</h2><h3 id="1-Local-Space"><a href="#1-Local-Space" class="headerlink" title="1. Local Space"></a>1. Local Space</h3><p>本地坐标空间是指创建一个空间模型时所用的坐标空间。大部分情况下，我们建立一个模型的时候，会默认以（0，0，0）为原点来建模。即便是做一个大工程，需要用到非常多的模型，我们也是从头开始，在本地坐标空间里把模型逐个搭建好，再在后续的坐标空间里进行整合。</p>
+<p>以建立立方体模型为例，顶点坐标设置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> vertices[] = &#123; <span class="comment">// 一个立方体六个面，每个面由两个三角形组成，每个三角形三个点，共36个点</span></span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line"></span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line"></span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line"></span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line"></span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>, -<span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line"></span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,</span><br><span class="line">		-<span class="number">0.5f</span>,  <span class="number">0.5f</span>, -<span class="number">0.5f</span>,</span><br><span class="line">	&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="2-World-Space"><a href="#2-World-Space" class="headerlink" title="2. World Space"></a>2. World Space</h3><p>上一小节我们提出了在Local Space中建立模型，也就是说，基本上我们所有模型都是基于（0，0，0）原点建立的，如果直接把这些模型都绘制出来的话，可能最终效果我们会看到所有这些模型都堆在一个地方重叠了，这显然不是我们想要的效果。为了将每个模型放到它应在的位置，我们引入了世界坐标空间的概念。我们为某个模型定义一个偏移量（offset），例如说在X轴上偏移2，在Y轴上偏移5，在Z轴上偏移-15，也就是把这个模型做一个（2， 5，-15）的平移操作，平移后这个模型到了它应在的位置，这时候，我们可以认为它的顶点坐标是属于世界坐标空间的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>让我们回顾一下这张图，刚刚说的平移操作其实就是model矩阵的变换结果，我们通过model矩阵，把某个模型的所有顶点统一地移动到了某个位置，这样我们就把模型顶点坐标从Local Space变换到World Space了。</p>
+<p>Model变换矩阵不仅仅可以完成平移操作，还可以完成缩放、和旋转的操作。例如说我们想画多个立方体，这些立方体零散分布在空间中，这时其实就是在逐个绘制立方体时，给每个立方体一个model矩阵，每个model矩阵都有自己的平移、旋转、缩放参数，把model矩阵的值赋给Vertex Shader，这样最终绘制出来的效果就是每个立方体都在不同的位置，大小、方向各不相同，这就是世界空间坐标以及model矩阵变换的意义。</p>
+<h3 id="3-View-Space"><a href="#3-View-Space" class="headerlink" title="3. View Space"></a>3. View Space</h3><p>观察坐标空间，在OpenGL中通常会理解为<strong>相机空间</strong>或者<strong>视觉空间</strong>。View Space是将World Space坐标转换成用户视角上的坐标。不妨想象一下在一个世界坐标空间内，我们放置了许多立方体，我们可以从一个屏幕上观察这些立方体，而屏幕内容就是来自一个摄像机（Camera），随着摄像机的移动，视角调整，我们可以从不同角度、不同方向观察这些立方体。</p>
+<p>反过来看，我们移动摄像机，其实就相当于我们自身不动，移动的是整个世界坐标空间，通过矩阵变换，我们让特定的一些顶点靠近Camera，一些顶点远离Camera，这样，就实现了我们想要的调整视角、视距来观察世界的效果。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>从图中可以看出，这些变换会存储在View Matrix中，View Matrix会将顶点坐标从World Space变换到View Space中。关于这部分我们会在下一篇文章里更加详细地展开讲解。</p>
+<h3 id="4-Clip-Space"><a href="#4-Clip-Space" class="headerlink" title="4. Clip Space"></a>4. Clip Space</h3><p>当所有Vertex Shader运行完之后，OpenGL希望大部分坐标会落在一个特定的范围里，而不在这个范围内的坐标都会被裁剪掉（Clipped），这就是Clip Space命名缘由。裁剪多余的坐标后，剩余的坐标就会形成Fragment，也就是光栅化，最后出现在屏幕上。</p>
+<p>跟之前的类似，我们会定义一个Projection Matrix来完成从View Space到Clip Space的坐标变换。在Projection Matrix里，我们指定了坐标的范围，例如[-1000, 1000]，接下来，我们定义的坐标范围在[-1000, 1000]内的顶点都会被按比例映射到[-1, 1]区间内；而在[-1000, 1000]区间外的顶点都会映射到[-1, 1]区间外，最终会被裁剪掉。</p>
+<p>如果我们绘制的是一个图元（primitive），例如说一个三角形，这个三角形的顶点坐标跨度比较大，超出了我们定义的坐标范围的话，那么OpenGL会自动重新构造一个或者多个三角形（最终顶点范围都在[-1, 1]内）来适应坐标范围。</p>
+<p>形象地说，Projection Matrix会创建一个视锥（Frustum），所有在视锥里的坐标点都会出现在屏幕上。这种将特定范围内的坐标映射到NDC坐标中的过程称为<strong>投影</strong>。当所有顶点坐标都转换到Clip Space之后，我们会把顶点坐标的x，y，z分量都除以齐次坐标的w分量，得到其原始坐标，这个过程叫作<strong>透视除法</strong>，了解一下。这一步会在Vertex Shader执行的最后阶段里自动执行。</p>
+<p>在该阶段过后，我们的坐标就会映射为屏幕坐标（通过glViewport方法设置），并光栅化为Fragment输出。</p>
+<p>根据表现形式的不同，投影一般分为两种，一种是正射投影（Orthographic Projection），另一种是透视投影（Perspective Projection），两种投影分别会建立不同的视锥体（Frustum），视觉效果的差别也会因为视锥体的不同而差异化。</p>
+<h4 id="4-1-正射投影-Orthographic-Projection"><a href="#4-1-正射投影-Orthographic-Projection" class="headerlink" title="4.1 正射投影 Orthographic Projection"></a>4.1 正射投影 Orthographic Projection</h4><p>正射投影定义了一个长方体样式的视锥体，不在该视锥体范围内的顶点都会被裁剪掉（如图）。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://learnopengl.com/img/getting-started/orthographic_frustum.png" alt="Orthographic Projection Frustum" title="">
+                </div>
+                <div class="image-caption">Orthographic Projection Frustum</div>
+            </figure>
+<p>当创建正射投影矩阵时，我们需要指定视锥体的长、宽、高，具体来说就是X轴的坐标范围、Y轴的坐标范围以及近平面、远平面的距离。我们可以使用GLM的函数来获取正射投影矩阵：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 projection = glm::ortho(<span class="number">0.0f</span>, <span class="number">800.0f</span>, <span class="number">0.0f</span>, <span class="number">600.0f</span>, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br></pre></td></tr></table></figure>
+<p>这样我们就定义了视锥体left为0，right为800，bottom为0，top为600，近平面距离0.1，远平面距离100f的长方体。</p>
+<p>正射投影的思想非常直观，但是会造成不真实的视觉效果，因为它没有将<strong>透视</strong>效果考虑进去。正射投影跟透视投影的区别可以通过下图来辨别：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://learnopengl.com/img/getting-started/perspective_orthographic.png" alt="Differences between orthographic projection and perspective projection" title="">
+                </div>
+                <div class="image-caption">Differences between orthographic projection and perspective projection</div>
+            </figure>
+<h4 id="4-2-透视投影-Perspective-Projection"><a href="#4-2-透视投影-Perspective-Projection" class="headerlink" title="4.2 透视投影 Perspective Projection"></a>4.2 透视投影 Perspective Projection</h4><p>透视投影其实已经在前边的文章里讲过了，这里简单复习一下。在现实生活中，我们知道远处的东西看起来更小，而近处的东西看起来更大；两条无限延伸、互相平行的直线会在地平线处汇聚在一起。这种奇妙的效果我们称之为<strong>透视</strong>。</p>
+<p>透视投影矩阵会定义一个四棱锥柱样式的视锥体，除此之外还会修改每个顶点的w分量，距离Camera越远的顶点坐标的w分量就越大，被变换到Clip Space的坐标都会落到[-w, w]区间内，不在该区间内的顶点都会被裁剪掉。而因为OpenGL要求最终坐标需要在[-1, 1]区间内，所以所有坐标的所有分量都会除以w分量（透视除法），得到最终在[-1, 1]区间内的坐标。当w分量越大的时候，做透视除法后的坐标值就越小，这样物体在视觉上就越小，这也就是我们需要的“透视”效果。</p>
+<p>我们可以通过GLM的内置函数建立透视投影矩阵：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 projection = glm::perspective(glm::radians(<span class="number">45.0f</span>), (<span class="keyword">float</span>)width/(<span class="keyword">float</span>)height, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br></pre></td></tr></table></figure>
+<p>这里我们指定了fov（Field of View，视角大小）为45度（转为弧度），宽高比，近平面距离0.1f，远平面距离100f的一个视锥体：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://learnopengl.com/img/getting-started/perspective_frustum.png" alt="Perspective Projection Frustum" title="">
+                </div>
+                <div class="image-caption">Perspective Projection Frustum</div>
+            </figure>
+<p>近平面距离一般设置为0.1f，远平面距离一般设置为100f。</p>
+<p>至于如何根据这些参数来计算透视投影矩阵，请参阅《1.4 线代基础与矩阵变换原理》。</p>
+<h3 id="5-Screen-Space"><a href="#5-Screen-Space" class="headerlink" title="5. Screen Space"></a>5. Screen Space</h3><p>在进行透视除法后，我们得到了NDC坐标，剩下的就交给OpenGL自行把NDC坐标转换成屏幕像素坐标，也就是把NDC坐标映射到Screen Space当中。在进行最后一步之前，我们需要通过<code>glViewport(x, y, width, height)</code>来告诉OpenGL我们展示用的窗口大小是多少，绘制时的横纵轴偏移值x，y分别是多少。</p>
+<p>最终坐标的形式如下：</p>
+<p>$\begin{bmatrix}x_w \\ y_w \\ z_w\end{bmatrix} = \begin{bmatrix}\frac{width}{2}x_{ndc} + x + \frac{width}{2} \\ \frac{height}{2}y_{ndc} + y + \frac{height}{2} \\ \frac{far - near}{2}z_{ndc} + \frac{far + near}{2}\end{bmatrix}$</p>
+<p>可以通过结果推导出Viewport Matrix：</p>
+<p>$\begin{bmatrix}\frac{width}{2} &amp; 0 &amp; 0 &amp; x + \frac{width}{2} \\ 0 &amp; \frac{height}{2} &amp; 0 &amp; y + \frac{height}{2} \\ 0 &amp; 0 &amp; \frac{far - near}{2} &amp; \frac{far + near}{2} \\ 0 &amp; 0&amp; 0&amp; 1 \end{bmatrix}$</p>
+<p>大家可以画图比划一下。</p>
+<h2 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h2><p>我们来结合下图总结一下OpenGL中坐标的变换过程。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLpipeline.png" alt="OpenGLPipeline" title="">
+                </div>
+                <div class="image-caption">OpenGLPipeline</div>
+            </figure>
+<p>首先，我们在Local Space里建立好模型，得到一系列model coordinates顶点，通过将这些顶点坐标左乘Model Matrix，我们对模型进行了平移、旋转和缩放，得到了world coordinates顶点；接下来，我们调整Camera，观察我们所需要的视角，这一步通过讲顶点坐标左乘View Matrix完成，得到eye coordinates顶点；然后，我们根据实际需要对模型进行投影变换（正射投影或者透视投影），讲顶点坐标左乘Projection Matrix得到clip coordinates，紧接着我们对齐次坐标形式的顶点的x, y, z, w分量都除以w分量，也就是做透视除法，得到NDC坐标；最后，我们通过<code>glViewport(x, y, width, height);</code>方法告诉OpenGL绘制窗口的大小，让OpenGL自行将NDC坐标转换成屏幕坐标，最后在屏幕上渲染出我们想要的图像。<br>上述local coordinates到clip coordinates的过程可以用这么一条式子表达：<br>$V_{clip} = M_{projection} \cdot M_{view} \cdot M_{model} \cdot V_{local}$</p>
+<p>需要注意的是在OpenGL里，向量跟矩阵相乘是从右往左计算的，所以这里的计算过程实际上是$M_{model}$先与$V_{local}$相乘，计算结果再跟$M_{view}$相乘，最后再跟$M_{projection}$相乘。</p>
+<p>至此，OpenGL从原始顶点数据到最终在屏幕上渲染出来的流水线过程讲诉完毕。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-09-16T12:32:06.750Z" itemprop="dateUpdated">2018-09-16 20:32:06</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/09/16/1-5-OpenGL坐标系统/" target="_blank" rel="external">https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://tchaikovdriver.github.io">
+            <img src="/img/avatar.jpg" alt="TchaikovDriver">
+            TchaikovDriver
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OpenGL-ES/">OpenGL ES</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&title=《1.5 OpenGL坐标系统》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&title=《1.5 OpenGL坐标系统》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.5 OpenGL坐标系统》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/09/16/1-6-OpenGL-Camera/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">1.6 OpenGL Camera</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/09/16/1-4-OpenGL线性代数基础与矩阵变换原理/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">1.4 OpenGL线性代数基础与矩阵变换原理</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老哥
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>TchaikovDriver &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&title=《1.5 OpenGL坐标系统》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&title=《1.5 OpenGL坐标系统》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.5 OpenGL坐标系统》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-5-OpenGL坐标系统/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACrElEQVR42u3aQW4jMQwEwPz/08l1D7HdTUqOFyifAmQ8M6UAItPi11f8+X76+fea9udH93n+rMMfPDw8vGuv/vwB+fUJ8tgS4OHh4V3jJS8xg+Ub+qzwvLDg4eHhfTBvU0hyPB4eHt7/yEsa31mD/hGFAQ8PDy/mbSLazW8TWH49Hh4e3nt4m3b2r36+cr6Hh4eHtz5VT4rEZsueFZXibfHw8PAu8PINN48V2jD3bLuMh4eH9x7e7NLZ8VheZmZLWTTfeHh4eEd5SdPcbu7Jd9sRhGGAi4eHh7fg5QFBfjR16sAsHzUo/lfAw8PDO8rLx6TyBvpUpTo2EICHh4e35rUNcVsqZsMBmyOxh8uBh4eHd4iXbPE34obhkVV7fzw8PLxrvLz9TRriOjOOc9e6COHh4eFd4CUFIGln941y/ib1t/Dw8PAu8IpNdsQ4FUnk7TgeHh7ebV7eKLeB72yBZkMG0V8MDw8Pb83Lj7hm8cQG3w4fFDEuHh4e3oLXfnkWWGyi3qRpLpB4eHh4h3ibEYG2eLRDAHkb/fBZeHh4eG/kzV6oDTKS8a987OBhJIGHh4d3iNcGDXkJ2dxzNijwyz3x8PDwrvHaQ/q8AGxChxl+eFM8PDy8mNdu6HUqPAqI2zD3RbHBw8PDu8xLGMkmPsO0Tzl2poeHh4e34CUN8SY+SJrypGUvAgs8PDy8y7xNfHBqLGB/DFZUGzw8PLyS911+NulovqG3S/OwMODh4eFd4M1GmmaPSUpCEnBcGd7Cw8PDK3nJq+ersvlWPtRVRCR4eHh413jti86OtfI2+tiC4uHh4X0wL3nF2UK0jTseHh7ep/HawLcNJtqmPxq6wsPDw7vAy0dF24CgHTJoB7NePAUPDw/vAq8eZgqWpj1Oa4OGTXiBh4eHt+D9AMNAK/B49hgkAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

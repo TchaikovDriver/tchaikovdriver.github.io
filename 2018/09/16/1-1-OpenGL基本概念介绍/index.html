@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>1.1 OpenGL基本概念介绍 | Endless August</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="OpenGL ES">
+    <meta name="description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+<meta name="keywords" content="OpenGL ES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.1 OpenGL基本概念介绍">
+<meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/index.html">
+<meta property="og:site_name" content="Endless August">
+<meta property="og:description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:updated_time" content="2018-09-16T12:28:52.516Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.1 OpenGL基本概念介绍">
+<meta name="twitter:description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+<meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">TchaikovDriver</h5>
+          <a href="mailto:c2359438@qq.com" title="c2359438@qq.com" class="mail">c2359438@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/TchaikovDriver" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">1.1 OpenGL基本概念介绍</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">1.1 OpenGL基本概念介绍</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-09-16T11:45:01.000Z" itemprop="datePublished" class="page-time">
+  2018-09-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基本概念介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">基本概念介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、什么是OpenGL-ES？"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、什么是OpenGL ES？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-OpenGL功能概述"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1. OpenGL功能概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-OpenGL函数命名规则"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. OpenGL函数命名规则</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-OpenGL应用程序的运作流程"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">3. OpenGL应用程序的运作流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、OpenGL基本概念"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、OpenGL基本概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-Vertex"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. Vertex</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-Fragment-amp-Rasterization"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. Fragment &amp; Rasterization</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-Shader"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">3. Shader</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-坐标系"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">4. 坐标系</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-1-1-OpenGL基本概念介绍"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">1.1 OpenGL基本概念介绍</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-16 19:45:01" datetime="2018-09-16T11:45:01.000Z"  itemprop="datePublished">2018-09-16</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="基本概念介绍"><a href="#基本概念介绍" class="headerlink" title="基本概念介绍"></a>基本概念介绍</h1><p>[TOC]</p>
+<h2 id="一、什么是OpenGL-ES？"><a href="#一、什么是OpenGL-ES？" class="headerlink" title="一、什么是OpenGL ES？"></a>一、什么是OpenGL ES？</h2><p>OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEnd，四边形（GL_QUADS）、多边形（GL_POLYGONS）等复杂图元等许多非绝对必要的特性。本次学习的OpenGL ES版本为2.0，是基于OpenGL 3.0裁剪定制而成的。</p>
+<h3 id="1-OpenGL功能概述"><a href="#1-OpenGL功能概述" class="headerlink" title="1. OpenGL功能概述"></a>1. OpenGL功能概述</h3><ul>
+<li>图形基本组成要素（What）：Point, Edge, Polygon</li>
+<li>属性Attribute（How）</li>
+<li>Transformation - Viewing and Modeling<br>从运行过程来看，OpenGL其实是一个有限状态机（finite state machine）</li>
+</ul>
+<h3 id="2-OpenGL函数命名规则"><a href="#2-OpenGL函数命名规则" class="headerlink" title="2. OpenGL函数命名规则"></a>2. OpenGL函数命名规则</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg" alt="OpenGLFunctionNaming" title="">
+                </div>
+                <div class="image-caption">OpenGLFunctionNaming</div>
+            </figure>
+<h3 id="3-OpenGL应用程序的运作流程"><a href="#3-OpenGL应用程序的运作流程" class="headerlink" title="3. OpenGL应用程序的运作流程"></a>3. OpenGL应用程序的运作流程</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png" alt="OpenGLProgramBaseStructure" title="">
+                </div>
+                <div class="image-caption">OpenGLProgramBaseStructure</div>
+            </figure>
+<p>一个交互式的OpenGL应用程序一般流程如下：</p>
+<ul>
+<li>配置并创建一个窗口，用于OpenGL输出</li>
+<li>初始化一些在整个应用程序运行期间所需的OpenGL状态值</li>
+<li>处理用户事件，如键盘输入、触摸事件、鼠标移动或者改变窗口大小等</li>
+<li>根据用户的输入，改变OpenGL状态值，在窗口中绘制图像</li>
+</ul>
+<p>可以看出，OpenGL是非面向对象而是面向过程的，开发者需要维护一个状态机，根据用户的输入而改变OpenGL的状态，状态的变更会触发新图像的绘制，最终通过无限循环来实现交互效果。</p>
+<h2 id="二、OpenGL基本概念"><a href="#二、OpenGL基本概念" class="headerlink" title="二、OpenGL基本概念"></a>二、OpenGL基本概念</h2><p>在OpenGL ES中，由于去掉了多边形这种复杂图元，所以只剩下点、线和三角形这三类图元。下面将围绕这三类图元讲诉OpenGL中的一些基本概念。</p>
+<h3 id="1-Vertex"><a href="#1-Vertex" class="headerlink" title="1. Vertex"></a>1. Vertex</h3><p>Vertex就是顶点的意思，一切图形都有Vertex，Vertex序列可以围成一个图形。</p>
+<h3 id="2-Fragment-amp-Rasterization"><a href="#2-Fragment-amp-Rasterization" class="headerlink" title="2. Fragment &amp; Rasterization"></a>2. Fragment &amp; Rasterization</h3><p>光栅化（Rasterization）是指将点、线、三角形映射到屏幕上的像素点的过程，每个映射区域叫作Fragment，换句话说，光栅化就是生成Fragment的过程。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png" alt="RasterizationAndFragment" title="">
+                </div>
+                <div class="image-caption">RasterizationAndFragment</div>
+            </figure>
+<h3 id="3-Shader"><a href="#3-Shader" class="headerlink" title="3. Shader"></a>3. Shader</h3><p>着色器程序（Shader）用于描述如何绘制（渲染），OpenGL包含了GLSL（OpenGL ShadingLanguage），是一门编程语言，语法与C语言类似。OpenGL渲染需要两种Shader: Vertex Shader和Fragment Shader。<br>Shader的最终目的就是确定图形的Vertex坐标和Fragment颜色，我们想要用 OpenGL 实现任何效果，无论是静止的光影、色彩、形状，还是运动的物理效果、粒子效果，归根结底都是要根据时间和位置确定Vertex坐标和Fragment颜色。</p>
+<p>下面是绘制一个红色三角形所需要的最简单的Vertex Shader和Fragment Shader的代码示例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vertex Shader</span></span><br><span class="line">attribute vec4 aPosition; <span class="comment">// 存储了三角形三个点的向量</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  gl_Position = aPosition;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Fragment Shader</span></span><br><span class="line">precision mediump <span class="keyword">float</span>; <span class="comment">// 告诉GPU在浮点数计算时使用中等精度就可以了</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  gl_FragColor = vec4(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>); <span class="comment">// R G B A, 红色三角形</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-坐标系"><a href="#4-坐标系" class="headerlink" title="4. 坐标系"></a>4. 坐标系</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>下面这张图展示了 OpenGL 通常的处理流程中各个环节的坐标系，以及坐标系之间的转换操作：</p>
+<ul>
+<li>Local space：我们为每个物体建好模型的时候，它们的坐标就是 Local space 坐标；</li>
+<li>World space：当我们要绘制多个物体时，如果直接使用 Local space 的坐标（把所有物体的原点放在一起），它们可能会发生重叠，因此我们需要把它们进行合理的移动、排布，最终各自的坐标就是 World space 的坐标了；</li>
+<li>Model matrix：把 Local space 坐标转换到 World space 坐标所使用的变换矩阵，它是针对每个物体做不同的变换；</li>
+<li>View space：通常也叫 Camera space 或者 Eye space，是从观察者（也就是我们自己）所在的位置出发，所看到的空间；</li>
+<li>View matrix：把 World space 坐标转换到 View space 坐标所使用的变换矩阵，它相当于是在移动相机位置，实际上是反方向移动整个场景（所有物体）；</li>
+<li>Clip space：OpenGL 只会渲染坐标值范围在 <code>[-1, 1]</code> 的内容，超出这个范围的内容都会被裁剪掉，这个范围的空间就叫 Clip space，Clip space 的坐标系也叫 Normalized Device Coordinate（NDC）；</li>
+<li>Projection matrix：把 View space 坐标转换到 Clip space 坐标所使用的变换矩阵，它会指定一个可见的范围，只有这个范围内的点才会转换到 NDC 中，而这个范围被称作视锥（Frustum）；projection matrix 有三种创建方式：正投影（Orthographic projection），透视投影（Perspective projection），以及 3D 投影（3D projection）；前两种比较常用；</li>
+<li>Screen space：屏幕上的空间，<code>glViewport</code> 调用指定的区域；</li>
+<li>Viewport transform：这一步是 OpenGL 自动完成的，把 Clip space 坐标转换到 Screen space 坐标；</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-09-16T12:28:52.516Z" itemprop="dateUpdated">2018-09-16 20:28:52</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/09/16/1-1-OpenGL基本概念介绍/" target="_blank" rel="external">https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://tchaikovdriver.github.io">
+            <img src="/img/avatar.jpg" alt="TchaikovDriver">
+            TchaikovDriver
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OpenGL-ES/">OpenGL ES</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&title=《1.1 OpenGL基本概念介绍》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&title=《1.1 OpenGL基本概念介绍》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.1 OpenGL基本概念介绍》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/09/16/1-2-OpenGL绘制三角形/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">1.2 OpenGL绘制三角形</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/09/16/hello-world/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Hello World</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老哥
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>TchaikovDriver &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&title=《1.1 OpenGL基本概念介绍》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&title=《1.1 OpenGL基本概念介绍》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.1 OpenGL基本概念介绍》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACoElEQVR42u3aYW7DMAgG0Nz/0t0BukwfYNpMevlVbZXj50mGAdcVP6+35+47vc9367y//dp48PDw8MZbf18u+W2+oQT597Eme8bDw8Pb5k02UX7l4PauBhU8PDy8J/ByQHLpV48PDw8P7z/ycnz+k3wdPDw8vOfweulsjskDTH7ch2steHh4eP3KQCGd/dbnlf4eHh4e3rirngeJ/OpPRgSSkBPtFg8PD2+B12tu9W7g6srzRhoeHh7eBq9XbK2WA3phZl7mwMPDw/sW7+9LPE9882GCyRFHdV88PDy8Aa+a2m43zKqpeX4QeHh4eGd5vZDQu6arAWM0EICHh4e3wMsLB9tFh1MtsdtiBB4eHt4hXrXVlJcVqoWGasGiEELw8PDwFnh5cysvNORt/iQM5AEpOno8PDy8MW++xUkqnIPzEIWHh4e3x8sLqXnDqTomVS2IFA4XDw8Pb42Xj1L1/vlPjmByNIUqCx4eHt5HeL1RgOowQf7e/E+Ch4eH9xlejsmv70mzKk/cf/k+Hh4e3gJv3tqflBLy9lvelsPDw8Pb5iVpbp46z0sP1+C5Tanx8PDwjvKqI1aTBlU1VMxDER4eHt4Gr1ASbY0UTIYDJg22esUXDw8PL+VVC6Z5MbfaKssbY3nzDA8PD2+PVy3XTl5WPYL8vc3oh4eHhzfmJZheO7/X9MpTZzw8PLxv8aqBoXxND5LyUZcPDw8P7xDvVXzyLW4gy+MLeHh4eAu8STzJm1j5GEEvTR/B8PDw8Fq86kY3ygdJkMgPAg8PD+8zvOpYVZ7OnioT58eEh4eH92ReXvzNVz6VauPh4eE9jTcZDqgGgF4hAw8PD2+blxQjqoMC1Su+umZUFsHDw8Nb4E3+4e8tml/rvYIIHh4e3hrvB+dOQQW3XyurAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

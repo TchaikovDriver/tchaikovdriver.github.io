@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>1.6 OpenGL Camera | Endless August</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="OpenGL ES">
+    <meta name="description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+<meta name="keywords" content="OpenGL ES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.6 OpenGL Camera">
+<meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/index.html">
+<meta property="og:site_name" content="Endless August">
+<meta property="og:description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/camera_axes.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/right_hand_principle.jpg">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/right_hand_coordinate.jpg">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+<meta property="og:updated_time" content="2018-09-16T12:33:04.713Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.6 OpenGL Camera">
+<meta name="twitter:description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+<meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">TchaikovDriver</h5>
+          <a href="mailto:c2359438@qq.com" title="c2359438@qq.com" class="mail">c2359438@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/TchaikovDriver" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">1.6 OpenGL Camera</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">1.6 OpenGL Camera</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-09-16T12:32:51.000Z" itemprop="datePublished" class="page-time">
+  2018-09-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-7-OpenGL-Camera"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.7 OpenGL Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、前言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、相机Camera"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、相机Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-确定相机位置与方向"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. 确定相机位置与方向</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-计算View-Matrix"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. 计算View Matrix</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#坐标系变换"><span class="post-toc-number">1.2.2.1.</span> <span class="post-toc-text">坐标系变换</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、OpenGL计算View-Matrix"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">三、OpenGL计算View Matrix</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">四、总结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-1-6-OpenGL-Camera"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">1.6 OpenGL Camera</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-16 20:32:51" datetime="2018-09-16T12:32:51.000Z"  itemprop="datePublished">2018-09-16</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-7-OpenGL-Camera"><a href="#1-7-OpenGL-Camera" class="headerlink" title="1.7 OpenGL Camera"></a>1.7 OpenGL Camera</h1><p>[TOC]</p>
+<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。</p>
+<p>我们再来看一次这张图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>在2.WORLD SPACE中，我们把Camera从$Y$轴正方向朝向$Y$轴负方向，这样取的景就是我们布置的模型世界的俯视图，这样摆放Camera就相当于给出一个View Matrix，使得顶点乘以这个矩阵后，能变换到俯视图里的位置。</p>
+<p>所以，本文的主题就是如何设置我们的View Matrix。</p>
+<h2 id="二、相机Camera"><a href="#二、相机Camera" class="headerlink" title="二、相机Camera"></a>二、相机Camera</h2><h3 id="1-确定相机位置与方向"><a href="#1-确定相机位置与方向" class="headerlink" title="1. 确定相机位置与方向"></a>1. 确定相机位置与方向</h3><p>我们先来思考一下，在三维空间里，我们怎么确立一个相机？显然，我们首先要确定位置（position），确定位置以后，我们还要确定方向（direction），也就是视角。位置可以用坐标点来表示，而方向则可以用空间内任意一个坐标点跟位置坐标点联合表示（即向量）：</p>
+<p>$position = (x_p, y_p, z_p)$</p>
+<p>$target = (x_t, y_t, z_t)$</p>
+<p>我们的方向direction就可以用向量来表示：</p>
+<p>$\vec{direction} = target - position = (x_t - x_p, y_t - y_p, z_t - z_p)$</p>
+<p>这时候我们就碰到一个问题：我们怎么确定相机的正反？想象一下，我们现在拿着相机对着某处拍照，正常情况下我们是正着拿相机（顶朝上），拍摄出来的照片自然是正的；当我们把相机反过来（顶朝下），拍照出来的照片就相当于做了180度旋转一样。因此，我们还需要额外的参数来确定相机的“正反”。</p>
+<p>除了方向向量以外，我们还需要指定相机顶部朝上和正右侧的向量来完全确定相机的“正反”。参照下图里的最后一张图，我们最终需要3个互相垂直的向量来确定相机的位置和方向：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://learnopengl.com/img/getting-started/camera_axes.png" alt="CameraVector" title="">
+                </div>
+                <div class="image-caption">CameraVector</div>
+            </figure>
+<p>首先我们确定了$position = (0, 0, 2)$，随后我们的朝向原点拍摄，$target = (0, 0, 0)$，这时候我们就先确立了第一个方向向量$direction = position - target = (0, 0, 2)$，注意这里的$direction$跟拍摄方向是相反的，后边会解释原因，为了方便后边的计算，我们把$direction$向量标准化为单位向量（模为1的向量）：</p>
+<p>$direction = \frac{direction}{||direction||} = \frac{(0, 0, 2)}{2} = (0, 0, 1)$</p>
+<p>接着，我们需要确定相机的$right$向量，以表示相机的右侧，这里会用到向量叉积的特性，这里我们先简单地回顾一下向量叉积和右手定则：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/right_hand_principle.jpg" alt="右手定则" title="">
+                </div>
+                <div class="image-caption">右手定则</div>
+            </figure>
+<p>我们做叉积$\vec{C} = \vec{A} \times \vec{B}$的时候，首先要确定向量的方向，我们将大拇指以外的四根手指指向$\vec{A}$，然后四指向$\vec{B}$向量方向弯曲，此时，大拇指指向的方向就是向量叉积得到的新向量$\vec{C}$的方向。更多关于向量叉积的内容请参阅《1.4 线性代数基础与矩阵变换原理》。</p>
+<p>回到我们的Camera，我们要求相机的右方向，也就是$\vec{right}$，而我们已经有了$\vec{direction}$向量了，利用叉积的性质，我们定义一个$\vec{up} = (0, 1, 0)$，也就是垂直于$X$-$Z$平面的向量，我们用这两个向量做叉积，来求$\vec{right}$向量：</p>
+<p>$\vec{right} = \vec{up} \times \vec{direction} = (1, 0, 0)$</p>
+<p>可以看出，这里的$\vec{right}$碰巧是$X轴$的正方向的单位向量，碰巧而已，不要在意。</p>
+<p>这下我们只剩下相机的顶部朝向，也就是$\vec{top}$向量了，聪明的各位应该能想到，我们同样用向量的叉积来求$\vec{top}$：</p>
+<p>$\vec{top} = \vec{direction} \times \vec{right} = (0, 1, 0)$</p>
+<p>这下，我们就得到了能确定相机位置、方向的三个单位向量：</p>
+<p>$\vec{diretion} = (0, 0, 1)$</p>
+<p>$\vec{right} = (1, 0, 0)$ </p>
+<p>$\vec{top} = (0, 1, 0)$</p>
+<p>这里需要特别注意的是，$\vec{direction}, \vec{right}, \vec{top}$这三个向量必须是单位向量，也就是向量的模必须为1，如果模不为1的话，需要将各个分量都除以该向量的模来得到单位向量。</p>
+<h3 id="2-计算View-Matrix"><a href="#2-计算View-Matrix" class="headerlink" title="2. 计算View Matrix"></a>2. 计算View Matrix</h3><p>既然知道了相机三个方向的向量，我们就可以开始着手计算View Matrix了。</p>
+<p>在这之前，我们要了解一下两个几何概念：</p>
+<ul>
+<li><p>标准正交基（Orthonormal Basis）</p>
+<p>在欧几里德空间$R^3$中，向量$\vec{v_1} = (1, 0, 0),  \vec{v_2} = (0, 1, 0),  \vec{v_3} =(0, 0, 1)$是一组标准正交基，这三个<strong>基向量</strong>的线性组合能展开整个三维欧几里德空间。可以认为，一个坐标系统可以由一组标准正交基来定义。</p>
+</li>
+<li><p>右手坐标系</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/right_hand_coordinate.jpg" alt="right_hand_coordinate" title="">
+                </div>
+                <div class="image-caption">right_hand_coordinate</div>
+            </figure>
+<p>接下来，我们研究一下相机调整视角的几何意义。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
+<p>我们可以参考上图，当我们把相机在$Y$轴正方向垂直向负方向拍摄时，我们能看到世界的俯视图。这个过程实际上是把World Space里的坐标变换到View Space里，这个变换的几何意义就是把顶点坐标从以$(1, 0, 0), (0, 1, 0), (0, 0, 1)$为标准正交基的坐标系变换到以$\vec{right}, \vec{top}, \vec{direction}$为标准正交基的坐标系（这也是为什么上边我们要求三个向量都必须为单位向量）。</p>
+<p>那么，我们这个坐标系转换要怎么做呢？</p>
+<hr>
+<h4 id="坐标系变换"><a href="#坐标系变换" class="headerlink" title="坐标系变换"></a>坐标系变换</h4><p>我们从线性代数的角度来解答这个问题。假设我们有一个父坐标空间$P$，其标准正交基为$\vec{v_1}, \vec{v_2}, \vec{v_3}$，有一个子坐标空间$C$，其标准正交基为$\vec{u_1}, \vec{u_2}, \vec{u_3}$。我们可以用父坐标空间的标准正交基的线性组合来表示子坐标空间的标准正交基：</p>
+<p>$\vec{u_1} = a_{11}\vec{v_1} + a_{12}\vec{v_2} + a_{13}\vec{v_3}$</p>
+<p>$\vec{u_2} = a_{21}\vec{v_1} + a_{22}\vec{v_2} + a_{23}\vec{v_3}$</p>
+<p>$\vec{u_3} = a_{31}\vec{v_1} + a_{32}\vec{v_2} + a_{33}\vec{v_3}$</p>
+<p>这个线性组合可以用矩阵来表示：</p>
+<p>$\begin{bmatrix}\vec{u_1} \\ \vec{u_2} \\ \vec{u_3}\end{bmatrix} = M_{camera} \cdot \begin{bmatrix}\vec{v_1} \\ \vec{v_2} \\ \vec{v_3}\end{bmatrix} = \begin{bmatrix}a_{11} &amp; a_{12}  &amp; a_{13} \\ a_{21} &amp; a_{22}  &amp; a_{23} \\ a_{31} &amp; a_{32}  &amp; a_{33} \end{bmatrix} \cdot \begin{bmatrix}\vec{v_1} \\ \vec{v_2} \\ \vec{v_3}\end{bmatrix}$</p>
+<p> 通过这个矩阵$M_{camera}$，我们能把坐标基从父坐标空间变换到子坐标空间，同理，我们的顶点也可以通过跟这个矩阵相乘来实现坐标系的变换（因为每个顶点都是标准正交基的线性组合）。</p>
+<hr>
+<p>现在我们知道了坐标系要怎么变换了，我们回到计算View Matrix环节。</p>
+<p>由于我们World Space的标准正交基是$(1, 0, 0), (0, 1, 0), (0, 0, 1)$，而View Space的标准正交基是$\vec{right}, \vec{top}, \vec{direction}$，所以我们的坐标系变换矩阵就是</p>
+<p>$M_{camera} = \begin{bmatrix}\vec{right}_x &amp; \vec{right}_y &amp; \vec{right}_z \\ \vec{top}_x &amp; \vec{top}_y &amp; \vec{top}_z \\ \vec{direction}_x &amp; \vec{direction}_y &amp; \vec{direction}_z \end{bmatrix}$</p>
+<p>转成齐次坐标可用的形式就是</p>
+<p>$M_{camera} = \begin{bmatrix}\vec{right}_x &amp; \vec{right}_y &amp; \vec{right}_z &amp; 0 \\ \vec{top}_x &amp; \vec{top}_y &amp; \vec{top}_z &amp; 0 \\ \vec{direction}_x &amp; \vec{direction}_y &amp; \vec{direction}_z &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+<p>有人可能会问，为什么是$right, top, direction$这个顺序排列？因为我们的父坐标空间跟子坐标空间都是右手坐标系，标准正交基的排列顺序跟坐标点的x, y, z分量排列顺序一致。</p>
+<p>通过矩阵$M_{camera}$，我们可以实现顶点坐标系的切换，相当于调整了视角。但是，我们还忽略了另一个关键因素——视距。视距怎么体现？我们可以想象，在World Space中，我们有一个在$Z$正半轴上的相机，相机朝向$Z$负半轴拍摄，当我们把相机向后移动（$Z$坐标增大），我们会感觉世界“远去”；当我们把相机向前移动（$Z$坐标减少），我们会感觉世界“靠近”。没错，其实相机的位置$position(x, y, z)$相当于将World Space坐标向反方向平移。</p>
+<p>在《1.4 线性代数基础与矩阵变换原理》里，我们曾经介绍过平移矩阵，结合$position(x, y, z)$我们可以写出平移矩阵：</p>
+<p>$M_{translation} = \begin{bmatrix}1 &amp; 0 &amp; 0 &amp; -position_x \\ 0 &amp; 1 &amp; 0 &amp; -position_y \\ 0 &amp; 0 &amp; 1 &amp; -position_z \\ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix}$</p>
+<p>因为$M_{camera}$和$M_{translation}$都是线性变换，我们可以通过矩阵相乘来把这坐标系变换、平移变换组合在一起，组合结果就是我们想要的View Matrix：</p>
+<p>$M_{view} = M_{camera} \cdot M_{translation} =  \begin{bmatrix}\vec{R}_x &amp; \vec{R}_y &amp; \vec{R}_z &amp; 0 \\ \vec{T}_x &amp; \vec{T}_y &amp; \vec{T}_z &amp; 0 \\ \vec{D}_x &amp; \vec{D}_y &amp; \vec{D}_z &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} \cdot \begin{bmatrix}1 &amp; 0 &amp; 0 &amp; -P_x \\ 0 &amp; 1 &amp; 0 &amp; -P_y \\ 0 &amp; 0 &amp; 1 &amp; -P_z \\ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix} $</p>
+<p>其中$\vec{R} = \vec{right}, \vec{T} = \vec{top}, \vec{D} = \vec{direction}, \vec{P} = \vec{position}$</p>
+<h2 id="三、OpenGL计算View-Matrix"><a href="#三、OpenGL计算View-Matrix" class="headerlink" title="三、OpenGL计算View Matrix"></a>三、OpenGL计算View Matrix</h2><p>前边我们已经讲了View Matrix的推导过程，那么在实际OpenGL开发中，我们是怎么获取View Matrix呢？</p>
+<p>GLM提供了<code>glm::lookAt(glm::vec3&amp; eye, glm::vec3&amp; center, glm::vec3&amp; up)</code>函数供我们直接获取View Matrix，其中<code>eye</code>参数就是相机的$position$；<code>center</code>是相机的$target$，即相机注视的点，用于计算$\vec{direction}$；<code>up</code>参数，用于计算$\vec{right}$。</p>
+<p>在上边的例子里，我们可以这样获取View Matrix：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 viewMatrix = glm::lookAt(</span><br><span class="line">    glm::vec3(<span class="number">0.0f</span>, <span class="number">0.0f</span> <span class="number">2.0f</span>),</span><br><span class="line">    glm::vec3(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>),</span><br><span class="line">    glm::vec3(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>至此，我们的OpenGL入门系列已经走到尾声，看完OpenGL入门系列文章，相信大家对OpenGL的基础概念以及原理都会有一定程度的了解。往后就是OpenGL进阶系列，在进阶系列出来之前，大家可以去<a href="https://learnopengl.com/Getting-started/Creating-a-window" target="_blank" rel="noopener">https://learnopengl.com/Getting-started/Creating-a-window</a> 或者 <a href="https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/" target="_blank" rel="noopener">https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/</a> 加深对OpenGL的认识和了解。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-09-16T12:33:04.713Z" itemprop="dateUpdated">2018-09-16 20:33:04</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/09/16/1-6-OpenGL-Camera/" target="_blank" rel="external">https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://tchaikovdriver.github.io">
+            <img src="/img/avatar.jpg" alt="TchaikovDriver">
+            TchaikovDriver
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OpenGL-ES/">OpenGL ES</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&title=《1.6 OpenGL Camera》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&title=《1.6 OpenGL Camera》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.6 OpenGL Camera》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/09/16/1-5-OpenGL坐标系统/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">1.5 OpenGL坐标系统</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老哥
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>TchaikovDriver &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&title=《1.6 OpenGL Camera》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&title=《1.6 OpenGL Camera》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.6 OpenGL Camera》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3a22rDMBREUf//T7tQ8hAocmZGcqhHW0+hcWUvF051Lschr/N3vX9+X6Ofj65Udj7uWDBgwHgsQ7nx362V63Wq/sqGVBgwYGzAcIPsNVLfP9sZBgwYMEaM0UNk4fI6HMOAAQPGfMBVdrgOrzOhHAYMGHsy3KQ0S3rdb2/JxWHAgPFARtYY+M7n2/sbMGDA+PeM01zKIc8NozOp7+u3YMCAUc1Qbq+X2NyWp86TwjEMGDBKGe6m2Y2VE51+R2MjGDBgFDGyslfGCIv+10EfBgwY1YysluXebL55mQV0GDBgdDCUR5k5Jq7ihdMiMGDAKGLoD2enl1Exzi3PwYABo5vh3ix7iGxSItwfBgwYpYxVqaZbwltV4YcBA0Y3w00g9UJ/VvODAQMGDKWunh3yVo18KQFamm6DAQNGHcMdg1Aebr5JmTUqYMCA0c1YVQ7TGwluSuwOfMCAAaODkR0B3XR3VcNgeECEAQNGNUNpSd6RiOolNuM/BgwYMEoZejhb23o85GX8HWDAgFHN0MNclu5mY176bjBgwOhmzB/j9OTWHS9znwEGDBitjNNc4QCEeVh0mxAwYMDoZrjJpBtes6ZCNroBAwaMboYbZLPGp3sAdZujMGDA2IHhpqbuiNj8we7D64MBAwaM6Bql9K8HaKPLAQMGjO0ZqwYvstexLODCgAHjgYzsSKePU+jHRzccw4ABYwdGNuKgD3XpoXPm+AgDBoxSxg/70dE/vn7rGwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

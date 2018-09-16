@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>1.3 OpenGL绘制矩形 | Endless August</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="OpenGL ES">
+    <meta name="description" content="1.3 绘制矩形[TOC] 一、前请提要在《1.2 绘制三角形》里，我们学习了如何绘制三角形，也知道了在OpenGL ES里面，可绘制的基本图元只有点、线和三角形。那么，这是否意味着我们不能画三角形以外的图形了呢？相信大家看到这里肯定会骂我傻子都知道肯定不可能只能画三角形。本文将会围绕“如何绘制矩形”来讲述绘制矩形的几种方式。 P.S: GLSurfaceView的配置请看《1.2 绘制三角形》，">
+<meta name="keywords" content="OpenGL ES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.3 OpenGL绘制矩形">
+<meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/index.html">
+<meta property="og:site_name" content="Endless August">
+<meta property="og:description" content="1.3 绘制矩形[TOC] 一、前请提要在《1.2 绘制三角形》里，我们学习了如何绘制三角形，也知道了在OpenGL ES里面，可绘制的基本图元只有点、线和三角形。那么，这是否意味着我们不能画三角形以外的图形了呢？相信大家看到这里肯定会骂我傻子都知道肯定不可能只能画三角形。本文将会围绕“如何绘制矩形”来讲述绘制矩形的几种方式。 P.S: GLSurfaceView的配置请看《1.2 绘制三角形》，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_DrawRectangle_Points.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_DrawRectangle_Points.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_fitting_circle.jpg">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_fitting_circle_example.png">
+<meta property="og:updated_time" content="2018-09-16T12:28:15.110Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.3 OpenGL绘制矩形">
+<meta name="twitter:description" content="1.3 绘制矩形[TOC] 一、前请提要在《1.2 绘制三角形》里，我们学习了如何绘制三角形，也知道了在OpenGL ES里面，可绘制的基本图元只有点、线和三角形。那么，这是否意味着我们不能画三角形以外的图形了呢？相信大家看到这里肯定会骂我傻子都知道肯定不可能只能画三角形。本文将会围绕“如何绘制矩形”来讲述绘制矩形的几种方式。 P.S: GLSurfaceView的配置请看《1.2 绘制三角形》，">
+<meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_DrawRectangle_Points.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">TchaikovDriver</h5>
+          <a href="mailto:c2359438@qq.com" title="c2359438@qq.com" class="mail">c2359438@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/TchaikovDriver" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">1.3 OpenGL绘制矩形</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">1.3 OpenGL绘制矩形</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-09-16T12:27:58.000Z" itemprop="datePublished" class="page-time">
+  2018-09-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-3-绘制矩形"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.3 绘制矩形</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、前请提要"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、前请提要</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、绘制思路"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、绘制思路</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-glDrawArrays方法"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. glDrawArrays方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-简单粗暴地绘制"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. 简单粗暴地绘制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-开源节流——GL-TRIANGLE-STRIP"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">3. 开源节流——GL_TRIANGLE_STRIP</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-随心所欲地画——glDrawElements"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">4. 随心所欲地画——glDrawElements</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-扩展——GL-TRIANGLE-FAN"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">5. 扩展——GL_TRIANGLE_FAN</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-1-矩形"><span class="post-toc-number">1.2.5.1.</span> <span class="post-toc-text">5.1 矩形</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-2-拟合圆形"><span class="post-toc-number">1.2.5.2.</span> <span class="post-toc-text">5.2 拟合圆形</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-1-3-OpenGL绘制矩形"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">1.3 OpenGL绘制矩形</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-16 20:27:58" datetime="2018-09-16T12:27:58.000Z"  itemprop="datePublished">2018-09-16</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-3-绘制矩形"><a href="#1-3-绘制矩形" class="headerlink" title="1.3 绘制矩形"></a>1.3 绘制矩形</h1><p>[TOC]</p>
+<h2 id="一、前请提要"><a href="#一、前请提要" class="headerlink" title="一、前请提要"></a>一、前请提要</h2><p>在《1.2 绘制三角形》里，我们学习了如何绘制三角形，也知道了在OpenGL ES里面，可绘制的基本图元只有点、线和三角形。那么，这是否意味着我们不能画三角形以外的图形了呢？相信大家看到这里肯定会骂我傻子都知道肯定不可能只能画三角形。<br>本文将会围绕“如何绘制矩形”来讲述绘制矩形的几种方式。</p>
+<p>P.S: <code>GLSurfaceView</code>的配置请看《1.2 绘制三角形》，本文主要讲<code>Renderer</code>里用到的<code>DrawProgram</code>接口的实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleRenderer</span> <span class="keyword">implements</span> <span class="title">GLSurfaceView</span>.<span class="title">Renderer</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 承载绘制逻辑的Program</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DrawProgram mProgram;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleRenderer</span><span class="params">(DrawProgram program)</span> </span>&#123;</span><br><span class="line">        mProgram = program;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSurfaceCreated</span><span class="params">(GL10 gl, EGLConfig config)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 指定了清空画布颜色时使用的颜色：黑色</span></span><br><span class="line">        GLES20.glClearColor(<span class="number">0f</span>, <span class="number">0f</span>, <span class="number">0f</span>, <span class="number">0f</span>);</span><br><span class="line">        <span class="comment">// 创建绘制程序</span></span><br><span class="line">        mProgram.createProgram(gl, config);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSurfaceChanged</span><span class="params">(GL10 gl, <span class="keyword">int</span> width, <span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 以像素为单位，指定了视口的左下角（在第一象限内，以（0，0）为原点的）位置。width，height————表示这个视口矩形的宽度和高度，根据窗口的实时变化重绘窗口</span></span><br><span class="line">        GLES20.glViewport(<span class="number">0</span>, <span class="number">0</span>, width, height);</span><br><span class="line">        mProgram.onSizeChanged(gl, width, height);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDrawFrame</span><span class="params">(GL10 gl)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 清空颜色缓冲区，也就是用黑色来填充画布</span></span><br><span class="line">        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);</span><br><span class="line">        <span class="comment">// 执行绘制逻辑</span></span><br><span class="line">        mProgram.draw(gl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * OpenGL绘制程序接口</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * Created by LiuYujie on 2018/1/16.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DrawProgram</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建GL程序，这两个参数其实我也不知道有啥用，以后再研究吧</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> gl     GL</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> config EGLConfig</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">createProgram</span><span class="params">(GL10 gl, EGLConfig config)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Surface尺寸变化时触发</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> gl     GL</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> width  新Surface宽度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> height 新Surface高度</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(GL10 gl, <span class="keyword">int</span> width, <span class="keyword">int</span> height)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行绘制操作</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> gl GL</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">(GL10 gl)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>P.S中的P.S：本文的涉及的代码可以在[这里]<a href="https://github.com/TchaikovDriver/OpenGLDemo)获取。" target="_blank" rel="noopener">https://github.com/TchaikovDriver/OpenGLDemo)获取。</a></p>
+<h2 id="二、绘制思路"><a href="#二、绘制思路" class="headerlink" title="二、绘制思路"></a>二、绘制思路</h2><p>相信不用我说，大家用膝盖都能想到，在只能画点、线、三角形的前提下， 绘制一个矩形，只需要用两个全等直角三角形拼起来就可以了，实际上也确实如此。</p>
+<p>那为什么要特意写一篇文章来说这一点？其实是想借着绘制矩形来介绍OpenGL里的几种<code>Vertex</code>组合图形的方式。</p>
+<h3 id="1-glDrawArrays方法"><a href="#1-glDrawArrays方法" class="headerlink" title="1. glDrawArrays方法"></a>1. glDrawArrays方法</h3><p>在《OpenGL入门——三角形的绘制》里，我们在准备好<code>Vertex Shader</code>和<code>Fragment Shader</code>、传递<code>Vertex</code>的<code>FloatBuffer</code>给GL程序之后，我们调用了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GLES20.glDrawArrays(GLES20.GL_TRIANGLES, <span class="number">0</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<p>来绘制三角形。调用<code>GLES20.glDrawArrays</code>方法之后，GLSL程序会遍历所有enable的数组，按顺序构造出指定的基本图元（这里是三角形<code>GLES20.GL_TRIANGLES</code>）并绘制出来。</p>
+<h3 id="2-简单粗暴地绘制"><a href="#2-简单粗暴地绘制" class="headerlink" title="2. 简单粗暴地绘制"></a>2. 简单粗暴地绘制</h3><p>用这种方式绘制矩形的话，我们需要6个点，每个三角形3个点，可以在<code>DrawTriangleProgram</code>的基础上修改<code>VERTEX</code>数组：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span>[] VERTEX = &#123;</span><br><span class="line">  			<span class="comment">// 第一个三角形</span></span><br><span class="line">            -.<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0f</span>,<span class="comment">// bottom left</span></span><br><span class="line">            -.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0f</span>,<span class="comment">// top left</span></span><br><span class="line">            .<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0f</span>,<span class="comment">// top right</span></span><br><span class="line">  			<span class="comment">// 第二个三角形</span></span><br><span class="line">  			-.<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0f</span>,<span class="comment">// bottom left</span></span><br><span class="line">  			.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0f</span>,<span class="comment">// top right</span></span><br><span class="line">            .<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0f</span> <span class="comment">// bottom right</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>接着是修改<code>draw(GL10 gl)</code>的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(GL10 gl)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 绘制两个三角形</span></span><br><span class="line">    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, <span class="number">0</span>, <span class="number">6</span>); <span class="comment">// 6个点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，GL程序就会遍历<code>mVertexBuffer</code>里的6个点（示意图如下），前三个点ABC绘制为一个三角形，后三个点ADC绘制为另一个三角形，在视觉上这两个三角形合并为一个矩形，这样我们的矩形就绘制完毕了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_DrawRectangle_Points.png" alt="构成矩形的两个三角形" title="">
+                </div>
+                <div class="image-caption">构成矩形的两个三角形</div>
+            </figure>
+<h3 id="3-开源节流——GL-TRIANGLE-STRIP"><a href="#3-开源节流——GL-TRIANGLE-STRIP" class="headerlink" title="3. 开源节流——GL_TRIANGLE_STRIP"></a>3. 开源节流——GL_TRIANGLE_STRIP</h3><p>在上一个简单粗暴的绘制方式里，崇尚节约的同学可能会想，一个矩形只需要4个点，上面这种方式其实有两个点是重复的，有没有办法可以复用中间两个点，减少<code>VERTEX</code>数组的长度？</p>
+<p>答案是肯定的，不然我就扯不了那么久了。</p>
+<p>我们可以看<code>GLES20.glDrawArrays(int mode, int first, int count)</code>方法签名，第一个参数<code>mode</code>指代的是绘制模式，绘制三角形的模式，只要好奇心足够，我们会发现绘制三角形一共有三种模式：</p>
+<p><code>GLES20.GL_TRIANGLES</code>，<code>GLES20.GL_TRIANGLE_STRIP</code>和<code>GLES20.GL_TRIANGLE_FAN</code>。</p>
+<p>第一种模式<code>GLES20.GL_TRIANGLES</code>是遍历顶点数组，以3个为一组，3个点组合为一个三角形，依次绘制，假设传入的顶点数为n，则绘制的三角形数量是n/3。</p>
+<p>第二种模式<code>GLES20.GL_TRIANGLE_STRIP</code>是遍历顶点数组，以<strong>相邻的3个点</strong>为组合，依次绘制，假设传入的定点数为n，则绘制的三角形数量是n-2（n &gt;= 3）。</p>
+<p>第三种模式<code>GLES20.GL_TRIANGLE_FAN</code>是遍历顶点数组，以<strong>首个顶点</strong>为所有要绘制的三角形的其中一个点，剩下的顶点按顺序，以2个点为单位，每个单位分别与第一个顶点组合成一个三角形。</p>
+<p>在这小节里，我们用<code>GLES20.GL_TRIANGLE_STRIP</code>来绘制矩形。</p>
+<p>首先，我们要确定顶点顺序，这一点很关键，OpenGL绘制图形是按顶点顺序来组合图形的，错误的顶点顺序组合而成的图形可能会跟我们想要的结果有出入。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_DrawRectangle_Points.png" alt="构成矩形的两个三角形" title="">
+                </div>
+                <div class="image-caption">构成矩形的两个三角形</div>
+            </figure>
+<p>还是这张图，可以看出，在上一小节中我们重复声明的两个点是点A和点C，所以<code>VERTEX</code>数组应该这样修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span>[] VERTEX = &#123;</span><br><span class="line">            -.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top left B</span></span><br><span class="line">            .<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top right C</span></span><br><span class="line">  			-.<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span>,<span class="comment">// bottom left A</span></span><br><span class="line">            .<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span> <span class="comment">// bottom right D</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>根据注释内容可以看出，B，C，A三个点组成矩形上半部分，C，A，D三个点组成矩形的下半部分，最后，我们修改一下绘制代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(GL10 gl)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 绘制两个三角形</span></span><br><span class="line">    GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, <span class="number">0</span>, <span class="number">4</span>); <span class="comment">// 4个点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，我们就实现了用4个点来绘制矩形。</p>
+<h3 id="4-随心所欲地画——glDrawElements"><a href="#4-随心所欲地画——glDrawElements" class="headerlink" title="4. 随心所欲地画——glDrawElements"></a>4. 随心所欲地画——glDrawElements</h3><p>在上面小节里，我们用<code>GLES20.GL_TRIANGLE_STRIP</code>的模式绘制了矩形，这个模式要求我们的<code>VERTEX</code>数组严格按照一定顺序来保存顶点坐标。设想一下，如果我们以后要绘制多个矩形，甚至是更复杂的图形，而这些图形中又有非常多共用的点，这种情况下怎么办？</p>
+<p>用<code>GLES20.GL_TRIANGLES</code>模式绘制会创建很多重复的点；用<code>GLES20.GL_TRIANGLE_STRIP</code>的话，视绘制的图形的复杂程度，我们未必能排列出一个恰好覆盖到所有图形的顶点顺序。</p>
+<p>设计OpenGL的大佬们当然早就预料到这种case，并给出了解决方案，这个解决方案就是使用<code>GLES20.glDrawElements(int mode,  int count, int type, Buffer indices)</code>方法来绘制图形。</p>
+<p>这个方法对比<code>GLES20.glDrawArrays(int mode, int first, int count)</code>，可以说是换了个思路来组合顶点，后者是按线性顺序以及绘制模式来决定组合图形的顶点，而前者则是通过显式声明的顶点顺序来组合图形，接下来会用代码来详细讲解。</p>
+<p>首先，我们还是定义好<code>VERTEX</code>数组：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span>[] VERTEX = &#123;</span><br><span class="line">  			-.<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span>,<span class="comment">// bottom left A</span></span><br><span class="line">            -.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top left B</span></span><br><span class="line">            .<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top right C</span></span><br><span class="line">            .<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span> <span class="comment">// bottom right D</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出，我们的顶点不能按<code>GLES20.GL_TRIANGLES_STRIP</code>的方式来绘制，因为复用的AC两点不在数组的中间。但是，我们知道，绘制这个矩形需要A，B，C和A，C，D来分别组成两个三角形。因此，我们确立了顶点的组合方式分别是第0，1，2和0，2，3个顶点，所以就有了下面的<code>DRAW_INDEX</code>数组：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">short</span>[] DRAW_INDEX = &#123;</span><br><span class="line">            <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="comment">// 第一个三角形，用到左下，左上和右上三个点</span></span><br><span class="line">            <span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span> <span class="comment">// 第二个点，用到左下，右上和右下三个点</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因为<code>GLES20.glDrawElements</code>方法接受的index数据结构是Buffer，所以我们要创建一个<code>ShortBuffer</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ShortBuffer indices = ByteBuffer.allocateDirect(DRAW_INDEX.length * SIZEOF_SHORT)</span><br><span class="line">                .order(ByteOrder.nativeOrder())</span><br><span class="line">                .asShortBuffer()</span><br><span class="line">                .put(DRAW_INDEX);</span><br><span class="line">indices.position(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>最后，实现绘制方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(GL10 gl)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 声明index长度，数据类型为unsigned short，以及传入indexBuffer</span></span><br><span class="line">   GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_INDEX.length, GLES20.GL_UNSIGNED_SHORT,                indices);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，GL程序在绘制时就会按我们指定的顶点顺序，取第0，1，2个顶点画第一个三角形，取第0，2，3个顶点画第二个三角形，两个三角形组合成一个矩形。</p>
+<p>在绘制复杂图形时，很多时候使用<code>GLES20.glDrawElements</code>方法可以<strong>节省不少顶点数组的空间</strong>，特别是每个顶点包含的信息越多的情况下（如顶点颜色）就更是如此。</p>
+<h3 id="5-扩展——GL-TRIANGLE-FAN"><a href="#5-扩展——GL-TRIANGLE-FAN" class="headerlink" title="5. 扩展——GL_TRIANGLE_FAN"></a>5. 扩展——GL_TRIANGLE_FAN</h3><h4 id="5-1-矩形"><a href="#5-1-矩形" class="headerlink" title="5.1 矩形"></a>5.1 矩形</h4><p>前面我们有提到<code>GLES20.GL_TRIANGLE_FAN</code>绘制模式，这种模式是以<strong>首个顶点</strong>为所有要绘制的三角形的其中一个点，剩下的顶点按顺序，以2个点为单位，每个单位分别与第一个顶点组合成一个三角形。</p>
+<p>下面会用这种方式来绘制矩形，需要注意的是，这种方式只会复用第一个顶点，而绘制一个矩形需要复用两个顶点，所以我们不可避免地需要多声明一个顶点：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span>[] VERTEX = &#123;</span><br><span class="line">  			-.<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span>,<span class="comment">// bottom left A</span></span><br><span class="line">            -.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top left B</span></span><br><span class="line">            .<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top right C</span></span><br><span class="line">  			.<span class="number">5f</span>, .<span class="number">5f</span>, <span class="number">0</span>, <span class="comment">// top right C</span></span><br><span class="line">            .<span class="number">5f</span>, -.<span class="number">5f</span>, <span class="number">0</span> <span class="comment">// bottom right D</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>从上面代码可以看出，我们多声明了一个顶点C，所以我们的顶点序列是ABCCD，在<code>GLES20.GL_TRIANGLE_FAN</code>模式下，会把A拿出来，剩下的点BCCD按序分为两组，第一组是BC，第二组是CD，这两组分别与顶点A组合，从而得到三角形ABC和三角形ACD，这样就能画出我们想要的矩形了。</p>
+<p>实现绘制代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, <span class="number">0</span>, VERTEX.length / <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="5-2-拟合圆形"><a href="#5-2-拟合圆形" class="headerlink" title="5.2 拟合圆形"></a>5.2 拟合圆形</h4><p>看到这里，可能大家都厌倦了画矩形了，之前我们有提过可以用三角形来拟合复杂图形，现在刚好可以用<code>GLES20.GL_TRIANGLE_FAN</code>绘制模式来演示一下如何用三角形来拟合圆形。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_fitting_circle.jpg" alt="拟合圆形" title="">
+                </div>
+                <div class="image-caption">拟合圆形</div>
+            </figure>
+<p>如上图所示，在一个圆里，以圆心为坐标原点建立直角坐标系，把圆形分割为若干等分的扇形，把圆心和扇形的射线与圆边的交点连接起来，就可以得到若干个扇形的内接三角形。当我们把圆形分割得足够多份的时候，我们用三角形拟合出来的图形就跟圆形越接近。</p>
+<p>经过简单的数学证明（这里就不赘述了，要证明请找刘老师），我们可以用以下代码来生成顶点坐标：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span>[] VERTEX;</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">        List&lt;Float&gt; vertices = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">// 首个顶点为圆心，即坐标原点(0,0,0)</span></span><br><span class="line">        vertices.add(<span class="number">0f</span>);</span><br><span class="line">        vertices.add(<span class="number">0f</span>);</span><br><span class="line">        vertices.add(<span class="number">0f</span>);</span><br><span class="line">        <span class="comment">// 顶点坐标范围是[-1, 1]</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> radius = <span class="number">0.25f</span>;</span><br><span class="line">        <span class="comment">// 将圆切割为40等份</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> deltaDegree = <span class="number">360f</span> / <span class="number">20f</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> endDegree = deltaDegree + <span class="number">360f</span>;</span><br><span class="line">        <span class="keyword">double</span> radian;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">float</span> i = <span class="number">0</span>; i &lt; endDegree; i += deltaDegree) &#123;</span><br><span class="line">            radian = Math.toRadians(i);</span><br><span class="line">            vertices.add((<span class="keyword">float</span>)(radius * Math.sin(radian)));</span><br><span class="line">            vertices.add((<span class="keyword">float</span>)(radius * Math.cos(radian)));</span><br><span class="line">            vertices.add(<span class="number">0f</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        VERTEX = <span class="keyword">new</span> <span class="keyword">float</span>[vertices.size()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = vertices.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            VERTEX[i] = vertices.get(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>由于视觉需要，我们会用到透视矩阵变换，这是超纲内容，会在下一期提到，现在大家暂且看看就好。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String VERTEX_SHADER =</span><br><span class="line">                    <span class="string">"attribute vec4 aPosition;\n"</span> +</span><br><span class="line">                    <span class="string">"uniform mat4 uMVPMatrix;\n"</span> +</span><br><span class="line">                    <span class="string">"void main() &#123;\n"</span> +</span><br><span class="line">                    <span class="string">"gl_Position = uMVPMatrix * aPosition;\n"</span> +</span><br><span class="line">                    <span class="string">"&#125;"</span>;</span><br></pre></td></tr></table></figure>
+<p>我们的<code>VERTEX_SHADER</code>新增了一个<code>uMVPMatrix</code>变量，而且会跟<code>aPosition</code>相乘后再赋值给<code>gl_Position</code>。这里其实就是对顶点坐标进行了一个矩阵变换。</p>
+<p>接着我们要给矩阵赋值，使得这个变换有意义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取uMVPMatrix的句柄</span></span><br><span class="line"><span class="keyword">int</span> mMVPMatrixLoc = GLES20.glGetUniformLocation(programHandle, <span class="string">"uMVPMatrix"</span>);</span><br><span class="line"><span class="keyword">float</span>[] mMVPMatrix = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">16</span>]; <span class="comment">// MVPMatrix是4x4的矩阵</span></span><br><span class="line"><span class="comment">// 给透视矩阵赋值</span></span><br><span class="line">Matrix.perspectiveM(matrix: mMVPMatrix, offset: <span class="number">0</span>, fovy: <span class="number">45f</span>, aspect: width / (<span class="keyword">float</span>) height, zNear: <span class="number">0.1f</span>, zFar: <span class="number">100f</span>);</span><br><span class="line"><span class="comment">// 因为设置透视矩阵后Z轴会倒置，要把图形平移到Z轴 -100f~-0.1f的范围内才可以看到</span></span><br><span class="line">Matrix.translateM(matrix: mMVPMatrix, offset: <span class="number">0</span>, x: <span class="number">0</span>, y: <span class="number">0</span>, z: -<span class="number">3f</span>);</span><br></pre></td></tr></table></figure>
+<p>最后的绘制逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(GL10 gl)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 把计算好的矩阵传给Vertex Shader中的uMVPMatrix变量</span></span><br><span class="line">    GLES20.glUniformMatrix4fv(mMVPMatrixLoc, <span class="number">1</span>, <span class="keyword">false</span>, mMVPMatrix, <span class="number">0</span>);</span><br><span class="line">    GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, <span class="number">0</span>, VERTEX.length / <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果预览：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_fitting_circle_example.png" alt="拟合圆形预览" title="">
+                </div>
+                <div class="image-caption">拟合圆形预览</div>
+            </figure>
+<p>是不是很黄？</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-09-16T12:28:15.110Z" itemprop="dateUpdated">2018-09-16 20:28:15</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/09/16/1-3-OpenGL绘制矩形/" target="_blank" rel="external">https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://tchaikovdriver.github.io">
+            <img src="/img/avatar.jpg" alt="TchaikovDriver">
+            TchaikovDriver
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OpenGL-ES/">OpenGL ES</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&title=《1.3 OpenGL绘制矩形》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&title=《1.3 OpenGL绘制矩形》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.3 OpenGL绘制矩形》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/09/16/1-4-OpenGL线性代数基础与矩阵变换原理/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">1.4 OpenGL线性代数基础与矩阵变换原理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/09/16/1-2-OpenGL绘制三角形/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">1.2 OpenGL绘制三角形</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老哥
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>TchaikovDriver &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&title=《1.3 OpenGL绘制矩形》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&title=《1.3 OpenGL绘制矩形》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1.3 OpenGL绘制矩形》 — Endless August&url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/09/16/1-3-OpenGL绘制矩形/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACqUlEQVR42u3aQZLbMAwEwP3/p5NrDmt5BiCdTap1crksiq0DSQ/w9RVfv+Lrz98nn1/d+/zN4QsPDw/v6NSfH5AwXj3xGdm+mpevAA8PD+8aL5nE86r7/M1sDZ/NBw8PD+8n8/JtI5pKgMfDw8P7n3g3DujtkR0PDw/vk7w8lk3ubaeYxArXsxY8PDy8mLc5zv6tz1fqe3h4eHhHGwLa5T5f6JNxhrPFw8PDu8DLF9xiuCDeTUKE2XEZDw8P7zO89jH7hoDncdqtojh84+Hh4V3g5aFtWwabFdvyjaeIKvDw8PAWvH1AMIt9k41h32qAh4eH93lei98s5fs4Y/X/AA8PD+9QQ0CC3BS3ZnFDcXDHw8PDu8DLA4J9mSp/EYeDEjw8PLwP8vYl/P0ZeL8J4eHh4Z3ltQWtpEg/a2+dbQNvNjA8PDy8C7x2UW6j2BmsLYDh4eHhfZ7XLtN5eJEs3PtI981BHw8PD+8oLy9xJfFEO04yWrstfbMl4OHh4R3lbeLaNnSYFb2SQ3OExMPDwzvEaxn7q20CWEUkeHh4eBd4bfl/X8SajZC3HRTj4OHh4S14s4V407C1aeHKwxE8PDy8G7y2eD9rtGpDhw2+qMjh4eHhjXh5wb4t6rcRQ85OZv7NvoeHh4d3gZc8+FSBv90e8mLY1+a94uHh4S149+KD5ynOtpw3v8TDw8O7xmsX3/xhbTVqXwYrwgg8PDy8krdvmcqX+FlxaxNM4OHh4d3gbVqa2se0sUUy2gEYHh4e3oiXx7L5ltC+y1WJK+mPwMPDw7vA20Sx+VF4E38MD+V4eHh4P4CXR8Cz8DePQvDw8PD+FV4bKLTBRMt+Exnj4eHhXePlraIJoL0rbyOo54aHh4d3gVc3MwWvJg9t8+atzWEdDw8P7xDvN9+YxTpYQ4C6AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
