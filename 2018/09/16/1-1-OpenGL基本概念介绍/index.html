@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
-<meta property="og:updated_time" content="2018-09-16T12:28:52.516Z">
+<meta property="og:updated_time" content="2018-09-16T13:31:33.237Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1.1 OpenGL基本概念介绍">
 <meta name="twitter:description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
@@ -162,6 +162,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/OpenGL-ES/">OpenGL ES</a></li></ul>
+
             
         </h5>
     </div>
@@ -191,6 +193,8 @@
             <time class="post-time" title="2018-09-16 19:45:01" datetime="2018-09-16T11:45:01.000Z"  itemprop="datePublished">2018-09-16</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/OpenGL-ES/">OpenGL ES</a></li></ul>
+
 
 
             
@@ -208,8 +212,21 @@
 <li>属性Attribute（How）</li>
 <li>Transformation - Viewing and Modeling<br>从运行过程来看，OpenGL其实是一个有限状态机（finite state machine）</li>
 </ul>
-<h3 id="2-OpenGL函数命名规则"><a href="#2-OpenGL函数命名规则" class="headerlink" title="2. OpenGL函数命名规则"></a>2. OpenGL函数命名规则</h3><p><img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg" alt="OpenGLFunctionNaming"></p>
-<h3 id="3-OpenGL应用程序的运作流程"><a href="#3-OpenGL应用程序的运作流程" class="headerlink" title="3. OpenGL应用程序的运作流程"></a>3. OpenGL应用程序的运作流程</h3><p><img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png" alt="OpenGLProgramBaseStructure"><br>一个交互式的OpenGL应用程序一般流程如下：</p>
+<h3 id="2-OpenGL函数命名规则"><a href="#2-OpenGL函数命名规则" class="headerlink" title="2. OpenGL函数命名规则"></a>2. OpenGL函数命名规则</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg" alt="OpenGLFunctionNaming" title="">
+                </div>
+                <div class="image-caption">OpenGLFunctionNaming</div>
+            </figure>
+<h3 id="3-OpenGL应用程序的运作流程"><a href="#3-OpenGL应用程序的运作流程" class="headerlink" title="3. OpenGL应用程序的运作流程"></a>3. OpenGL应用程序的运作流程</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png" alt="OpenGLProgramBaseStructure" title="">
+                </div>
+                <div class="image-caption">OpenGLProgramBaseStructure</div>
+            </figure>
+<p>一个交互式的OpenGL应用程序一般流程如下：</p>
 <ul>
 <li>配置并创建一个窗口，用于OpenGL输出</li>
 <li>初始化一些在整个应用程序运行期间所需的OpenGL状态值</li>
@@ -220,11 +237,23 @@
 <h2 id="二、OpenGL基本概念"><a href="#二、OpenGL基本概念" class="headerlink" title="二、OpenGL基本概念"></a>二、OpenGL基本概念</h2><p>在OpenGL ES中，由于去掉了多边形这种复杂图元，所以只剩下点、线和三角形这三类图元。下面将围绕这三类图元讲诉OpenGL中的一些基本概念。</p>
 <h3 id="1-Vertex"><a href="#1-Vertex" class="headerlink" title="1. Vertex"></a>1. Vertex</h3><p>Vertex就是顶点的意思，一切图形都有Vertex，Vertex序列可以围成一个图形。</p>
 <h3 id="2-Fragment-amp-Rasterization"><a href="#2-Fragment-amp-Rasterization" class="headerlink" title="2. Fragment &amp; Rasterization"></a>2. Fragment &amp; Rasterization</h3><p>光栅化（Rasterization）是指将点、线、三角形映射到屏幕上的像素点的过程，每个映射区域叫作Fragment，换句话说，光栅化就是生成Fragment的过程。</p>
-<p><img src="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png" alt="RasterizationAndFragment"></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png" alt="RasterizationAndFragment" title="">
+                </div>
+                <div class="image-caption">RasterizationAndFragment</div>
+            </figure>
 <h3 id="3-Shader"><a href="#3-Shader" class="headerlink" title="3. Shader"></a>3. Shader</h3><p>着色器程序（Shader）用于描述如何绘制（渲染），OpenGL包含了GLSL（OpenGL ShadingLanguage），是一门编程语言，语法与C语言类似。OpenGL渲染需要两种Shader: Vertex Shader和Fragment Shader。<br>Shader的最终目的就是确定图形的Vertex坐标和Fragment颜色，我们想要用 OpenGL 实现任何效果，无论是静止的光影、色彩、形状，还是运动的物理效果、粒子效果，归根结底都是要根据时间和位置确定Vertex坐标和Fragment颜色。</p>
 <p>下面是绘制一个红色三角形所需要的最简单的Vertex Shader和Fragment Shader的代码示例</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vertex Shader</span></span><br><span class="line">attribute vec4 aPosition; <span class="comment">// 存储了三角形三个点的向量</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  gl_Position = aPosition;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Fragment Shader</span></span><br><span class="line">precision mediump <span class="keyword">float</span>; <span class="comment">// 告诉GPU在浮点数计算时使用中等精度就可以了</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  gl_FragColor = vec4(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>); <span class="comment">// R G B A, 红色三角形</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="4-坐标系"><a href="#4-坐标系" class="headerlink" title="4. 坐标系"></a>4. 坐标系</h3><p><img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem"></p>
+<h3 id="4-坐标系"><a href="#4-坐标系" class="headerlink" title="4. 坐标系"></a>4. 坐标系</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png" alt="OpenGLCoordinateSystem" title="">
+                </div>
+                <div class="image-caption">OpenGLCoordinateSystem</div>
+            </figure>
 <p>下面这张图展示了 OpenGL 通常的处理流程中各个环节的坐标系，以及坐标系之间的转换操作：</p>
 <ul>
 <li>Local space：我们为每个物体建好模型的时候，它们的坐标就是 Local space 坐标；</li>
@@ -245,12 +274,12 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-09-16T12:28:52.516Z" itemprop="dateUpdated">2018-09-16 20:28:52</time>
+    最后更新时间：<time datetime="2018-09-16T13:31:33.237Z" itemprop="dateUpdated">2018-09-16 21:31:33</time>
 </span><br>
 
 
         
-        Nothing
+        要不打点钱？
         
     </div>
     
