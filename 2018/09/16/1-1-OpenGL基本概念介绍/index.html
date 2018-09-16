@@ -21,22 +21,22 @@
     
     
     <meta name="keywords" content="OpenGL ES">
-    <meta name="description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+    <meta name="description" content="1.1 基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/">
 <meta name="keywords" content="OpenGL ES">
 <meta property="og:type" content="article">
 <meta property="og:title" content="1.1 OpenGL基本概念介绍">
 <meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-1-OpenGL基本概念介绍/index.html">
 <meta property="og:site_name" content="Endless August">
-<meta property="og:description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+<meta property="og:description" content="1.1 基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLProgramBaseStructure.png">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/rasterization_generate_fragments.png">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
-<meta property="og:updated_time" content="2018-09-16T13:31:33.237Z">
+<meta property="og:updated_time" content="2018-09-16T13:42:53.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1.1 OpenGL基本概念介绍">
-<meta name="twitter:description" content="基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEn">
+<meta name="twitter:description" content="1.1 基本概念介绍[TOC] 一、什么是OpenGL ES？OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/">
 <meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/OpenGLFunctionNaming.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
@@ -107,20 +107,6 @@
               </a>
             </li>
         
-            <li class="waves-block waves-effect">
-              <a href="http://www.weibo.com/" target="_blank" >
-                <i class="icon icon-lg icon-weibo"></i>
-                Weibo
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/custom"  >
-                <i class="icon icon-lg icon-link"></i>
-                测试
-              </a>
-            </li>
-        
       </ul>
     </div>
   </div>
@@ -179,7 +165,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基本概念介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">基本概念介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、什么是OpenGL-ES？"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、什么是OpenGL ES？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-OpenGL功能概述"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1. OpenGL功能概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-OpenGL函数命名规则"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. OpenGL函数命名规则</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-OpenGL应用程序的运作流程"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">3. OpenGL应用程序的运作流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、OpenGL基本概念"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、OpenGL基本概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-Vertex"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. Vertex</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-Fragment-amp-Rasterization"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. Fragment &amp; Rasterization</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-Shader"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">3. Shader</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-坐标系"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">4. 坐标系</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-1-基本概念介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.1 基本概念介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、什么是OpenGL-ES？"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、什么是OpenGL ES？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-OpenGL功能概述"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1. OpenGL功能概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-OpenGL函数命名规则"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. OpenGL函数命名规则</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-OpenGL应用程序的运作流程"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">3. OpenGL应用程序的运作流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、OpenGL基本概念"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、OpenGL基本概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-Vertex"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. Vertex</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-Fragment-amp-Rasterization"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. Fragment &amp; Rasterization</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-Shader"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">3. Shader</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-坐标系"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">4. 坐标系</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -205,7 +191,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="基本概念介绍"><a href="#基本概念介绍" class="headerlink" title="基本概念介绍"></a>基本概念介绍</h1><p>[TOC]</p>
+            <h1 id="1-1-基本概念介绍"><a href="#1-1-基本概念介绍" class="headerlink" title="1.1 基本概念介绍"></a>1.1 基本概念介绍</h1><p>[TOC]</p>
 <h2 id="一、什么是OpenGL-ES？"><a href="#一、什么是OpenGL-ES？" class="headerlink" title="一、什么是OpenGL ES？"></a>一、什么是OpenGL ES？</h2><p>OpenGL(Open Graphics Library) 是一套标准的用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）。而OpenGL ES(Open Graphics Library for Embedded Systems)，顾名思义，是为嵌入式系统（如移动设备的系统）特殊定制的API，去除了glBegin/glEnd，四边形（GL_QUADS）、多边形（GL_POLYGONS）等复杂图元等许多非绝对必要的特性。本次学习的OpenGL ES版本为2.0，是基于OpenGL 3.0裁剪定制而成的。</p>
 <h3 id="1-OpenGL功能概述"><a href="#1-OpenGL功能概述" class="headerlink" title="1. OpenGL功能概述"></a>1. OpenGL功能概述</h3><ul>
 <li>图形基本组成要素（What）：Point, Edge, Polygon</li>
@@ -274,7 +260,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-09-16T13:31:33.237Z" itemprop="dateUpdated">2018-09-16 21:31:33</time>
+    最后更新时间：<time datetime="2018-09-16T13:42:53.176Z" itemprop="dateUpdated">2018-09-16 21:42:53</time>
 </span><br>
 
 

@@ -21,23 +21,23 @@
     
     
     <meta name="keywords" content="OpenGL ES">
-    <meta name="description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+    <meta name="description" content="1.6 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
 <meta name="keywords" content="OpenGL ES">
 <meta property="og:type" content="article">
 <meta property="og:title" content="1.6 OpenGL Camera">
 <meta property="og:url" content="https://tchaikovdriver.github.io/2018/09/16/1-6-OpenGL-Camera/index.html">
 <meta property="og:site_name" content="Endless August">
-<meta property="og:description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+<meta property="og:description" content="1.6 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
 <meta property="og:image" content="https://learnopengl.com/img/getting-started/camera_axes.png">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/right_hand_principle.jpg">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/right_hand_coordinate.jpg">
 <meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
-<meta property="og:updated_time" content="2018-09-16T13:32:15.394Z">
+<meta property="og:updated_time" content="2018-09-16T13:43:23.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1.6 OpenGL Camera">
-<meta name="twitter:description" content="1.7 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
+<meta name="twitter:description" content="1.6 OpenGL Camera[TOC] 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。 我们再来看一次这张图：">
 <meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/opengl_coordinate_systems.png">
     
         <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
@@ -108,20 +108,6 @@
               </a>
             </li>
         
-            <li class="waves-block waves-effect">
-              <a href="http://www.weibo.com/" target="_blank" >
-                <i class="icon icon-lg icon-weibo"></i>
-                Weibo
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/custom"  >
-                <i class="icon icon-lg icon-link"></i>
-                测试
-              </a>
-            </li>
-        
       </ul>
     </div>
   </div>
@@ -180,7 +166,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-7-OpenGL-Camera"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.7 OpenGL Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、前言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、相机Camera"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、相机Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-确定相机位置与方向"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. 确定相机位置与方向</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-计算View-Matrix"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. 计算View Matrix</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#坐标系变换"><span class="post-toc-number">1.2.2.1.</span> <span class="post-toc-text">坐标系变换</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、OpenGL计算View-Matrix"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">三、OpenGL计算View Matrix</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">四、总结</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-6-OpenGL-Camera"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.6 OpenGL Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、前言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、相机Camera"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">二、相机Camera</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-确定相机位置与方向"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1. 确定相机位置与方向</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-计算View-Matrix"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">2. 计算View Matrix</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#坐标系变换"><span class="post-toc-number">1.2.2.1.</span> <span class="post-toc-text">坐标系变换</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、OpenGL计算View-Matrix"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">三、OpenGL计算View Matrix</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">四、总结</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -206,7 +192,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="1-7-OpenGL-Camera"><a href="#1-7-OpenGL-Camera" class="headerlink" title="1.7 OpenGL Camera"></a>1.7 OpenGL Camera</h1><p>[TOC]</p>
+            <h1 id="1-6-OpenGL-Camera"><a href="#1-6-OpenGL-Camera" class="headerlink" title="1.6 OpenGL Camera"></a>1.6 OpenGL Camera</h1><p>[TOC]</p>
 <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。</p>
 <p>我们再来看一次这张图：</p>
 <figure class="image-bubble">
@@ -313,7 +299,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-09-16T13:32:15.394Z" itemprop="dateUpdated">2018-09-16 21:32:15</time>
+    最后更新时间：<time datetime="2018-09-16T13:43:23.473Z" itemprop="dateUpdated">2018-09-16 21:43:23</time>
 </span><br>
 
 
