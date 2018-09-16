@@ -195,11 +195,7 @@
 一、前言在《1.6 OpenGL坐标系统》里，我曾经给出下集预告，说将会在下一篇文章里详细讲解Camera部分，刘老师从不食言，今天，我们就来研究一下Camera。
 我们再来看一次这张图：
 
-                
-                    
-                    
-                
-  ...
+在2.WORLD SPACE中，我们把Camera从$Y$轴正方向朝向$Y$轴负方向，这样取的景就是我们布置的模型世界的俯视图，这样摆放Camera就相当于...
     
 
         <a href="/2018/09/16/1-6-OpenGL-Camera/" class="post-more waves-effect waves-button">
@@ -247,12 +243,7 @@
         1.6 OpenGL坐标系统[TOC]
 一、概述我们曾经在《1.1 基本概念介绍》里，简单地展示过OpenGL里的坐标转换过程（这张图将会在后边被多次引用）：
 
-                
-                    
-                    
-                
-                OpenGLCoordinateSystem
- ...
+在Vertex Shader运行后，我们可见的所有顶点都会转变成标准化设备坐标（Normal Device Coordinate，简称NDC），换句话说，每个顶点的x，y，z坐标都在[-1, 1]区间内，不在这个区间内的坐标都将不可...
     
 
         <a href="/2018/09/16/1-5-OpenGL坐标系统/" class="post-more waves-effect waves-button">

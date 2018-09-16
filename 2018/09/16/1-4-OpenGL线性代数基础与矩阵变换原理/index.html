@@ -218,43 +218,19 @@
 <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>撰写本文的主要目的是讲述计算机图形学中，向量和点通过矩阵运算来实现平移、缩放、旋转以及透视投影的原理。虽然文章主标题是”OpenGL入门”，但是从范畴上来说，这些原理并不局限于OpenGL，因为这些都是计算机图形学的内容，无论是在OpenGL，DirectX还是Vulkan，这些原理都是通用的。<br>本文首先会讲一些前提背景知识，如一些线性代数的基础，接下来会依次讲解平移、缩放、旋转和透视投影的原理，这些原理都是基于前面说到的线性代数的基础，而且这些基础不难理解，大家看的时候毋须有畏难心理。<br>对于线性代数零基础的同学来说，如果碰到看不懂的地方，可以反复看第一小节的线性代数基础，同时可以作图辅助理解，再有问题也可以来找刘老师一起探讨。</p>
 <h2 id="二、数学基础"><a href="#二、数学基础" class="headerlink" title="二、数学基础"></a>二、数学基础</h2><h3 id="1-向量"><a href="#1-向量" class="headerlink" title="1. 向量"></a>1. 向量</h3><h4 id="1-1什么是向量？"><a href="#1-1什么是向量？" class="headerlink" title="1.1什么是向量？"></a>1.1什么是向量？</h4><p>在计算机图形学中，向量（Vector）是最基本的运算元素之一。</p>
 <p>向量是指具有大小（长度）和方向的量，印刷体一般用粗体表示，而手写体一般在向量名上方加箭头表示。如图所示，向量$\vec{BA}$的计算方法就是用A点坐标减去B点坐标，向量$\vec{BA}$的方向用箭头标出，长度（向量的模）为向量的所有分量的平方和的平方根。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector.jpg" alt="OpenGL_vector" title="">
-                </div>
-                <div class="image-caption">OpenGL_vector</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector.jpg" alt="OpenGL_vector"></p>
 <p>因为向量只是表示方向和大小的量，因此，向量保持方向不变，在空间内任意平移，平移后的向量都与平移前的向量相等。像上图画的一样，对向量$\vec{BA}$的点B平移到坐标原点得到向量<strong>$\vec{OA’}$</strong>，$\vec{OA’}$ = $\vec{BA}$。</p>
 <h4 id="1-2-向量运算"><a href="#1-2-向量运算" class="headerlink" title="1.2 向量运算"></a>1.2 向量运算</h4><p>由于时间关系，大家可以认为向量没有除法这回事，所以我们这里会简单地说下向量的加法和乘法。</p>
 <p>向量的乘法有两种，一种是点积（也叫点乘），另一种是叉积（也叫叉乘）。点积的计算结果是<strong>标量</strong>，而叉积的计算结果是<strong>矢量</strong>（也就是<strong>向量</strong>）。</p>
 <p>如图，点积的计算实际上就是讲两个向量的每个分量分别相乘并求和，也可以通过计算两个向量的模的积再乘以两个向量夹角的余弦值得出。点积的几何意义在于可以计算两个向量之间的夹角。点积满足乘法的交换、分配和结合律。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector_dot_mul.jpg" alt="OpenGL_vector_dot_mul" title="">
-                </div>
-                <div class="image-caption">OpenGL_vector_dot_mul</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector_dot_mul.jpg" alt="OpenGL_vector_dot_mul"></p>
 <p>在3D图像空间中，向量叉积会用到单位向量（i, j, k），其计算方法如下：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector_x_mul_1.jpg" alt="OpenGL_vector_x_mul" title="">
-                </div>
-                <div class="image-caption">OpenGL_vector_x_mul</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/OpenGL_vector_x_mul_1.jpg" alt="OpenGL_vector_x_mul"></p>
 <p>在3D图像空间中，叉积的几何意义很有用，我们可以通过计算向量$\vec{a}$和$\vec{b}$的叉积得到垂直于向量$\vec{a}$和$\vec{b}$的向量$\vec{c}$，$\vec{c}$的模是$\vec{a}$和$\vec{b}$的模的乘积再乘以两个向量之间夹角的正弦值。光看图里的计算结果可能不太清楚计算方式，如果找不到规律的话，请找刘老师详谈。</p>
 <h4 id="1-3-右手定则"><a href="#1-3-右手定则" class="headerlink" title="1.3 右手定则"></a>1.3 右手定则</h4><p>在物理学中，我们曾经用过“右手定则”：在磁场中，有一根通电导线，将手张开，拇指垂直于其余四根手指，让磁感线垂直于掌心所在的平面，拇指以外的四根手指指向导线电流方向，这样大拇指指向的方向就是导线的运动方向。</p>
 <p>上面给出的例子只是“右手定则”在物理学中的一个应用场景，“右手定则”其实是用来判断向量叉积的方向的。</p>
 <p>定义矢量$\vec{A}$×矢量$\vec{B}$的结果为一矢量$\vec{C}$，其大小为|$\vec{A}$||$\vec{B}$|sinθ，θ为$\vec{A}$与$\vec{B}$的夹角。其方向满足右手定则：伸直右手四指指向$\vec{A}$的方向，沿着小于π的角度将四指卷向$\vec{B}$的方向，则拇指的指向即为叉积$\vec{C}$的方向。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/right_hand_principle.jpg" alt="右手定则" title="">
-                </div>
-                <div class="image-caption">右手定则</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/right_hand_principle.jpg" alt="右手定则"></p>
 <pre><code>撸牙签示意图
 </code></pre><h3 id="2-矩阵"><a href="#2-矩阵" class="headerlink" title="2. 矩阵"></a>2. 矩阵</h3><h4 id="2-1-何为矩阵？"><a href="#2-1-何为矩阵？" class="headerlink" title="2.1 何为矩阵？"></a>2.1 何为矩阵？</h4><p>矩阵，顾名思义，就是矩形的数列，在计算机图形学中，矩阵一般用于给向量做线性变换，不然矩阵也不会出现在我写的这篇文章里是吧。</p>
 <h4 id="2-2-矩阵运算"><a href="#2-2-矩阵运算" class="headerlink" title="2.2 矩阵运算"></a>2.2 矩阵运算</h4><p>我就不造轮子了，有关矩阵的运算（加、减、数乘、乘法、转置）可以看<a href="https://baike.baidu.com/item/%E7%9F%A9%E9%98%B5/18069?fr=aladdin" target="_blank" rel="noopener">这里</a>。</p>
@@ -267,13 +243,7 @@
 <p>假设线性空间V上的一个变换$A$为线性变换，对于V中的任意元素$\vec{a}$，$\vec{b}$和数域$P$中的任意$k$，都有</p>
 <p>$A(\vec{a}+\vec{b}) = A(\vec{a}) + A(\vec{b}) \\ A(k\vec{a}) = kA(\vec{a})$</p>
 <h3 id="1-平移"><a href="#1-平移" class="headerlink" title="1.平移"></a>1.平移</h3><h4 id="1-1-推导"><a href="#1-1-推导" class="headerlink" title="1.1 推导"></a>1.1 推导</h4><p>我们知道，在欧几里德空间（也就是我们常用的直角坐标系、三维空间坐标系等）里，向量的平移可以通过向量加法来实现。像下图的$\vec{OA’}$平移到$\vec{AB}$仅需加一个向量$\vec{OA}$就可以了。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_addition.png" alt="VectorAddition" title="">
-                </div>
-                <div class="image-caption">VectorAddition</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_addition.png" alt="VectorAddition"></p>
 <p>我们不难看出，向量的平移可以用如下式子表示：</p>
 <p>$\begin{bmatrix}x \\ y \\ z\end{bmatrix} + \begin{bmatrix}T_x \\ T_y \\ T_z\end{bmatrix} = \begin{bmatrix}x + T_x \\ y + T_y \\ z + T_z\end{bmatrix}$</p>
 <p>其中$T_x$，$T_y$，$T_z$分别是向量在$X$，$Y$，$Z$轴上的平移量。</p>
@@ -291,13 +261,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">translateM</span><span class="params">(<span class="keyword">float</span>[] m, <span class="keyword">int</span> mOffset, <span class="keyword">float</span> x, <span class="keyword">float</span> y, <span class="keyword">float</span> z)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span> ; i&lt;<span class="number">4</span> ; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> mi = mOffset + i;</span><br><span class="line">            m[<span class="number">12</span> + mi] += m[mi] * x + m[<span class="number">4</span> + mi] * y + m[<span class="number">8</span> + mi] * z;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>按实现代码来写矩阵的话，我们会得到$\begin{bmatrix}1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ T_x &amp; T_y &amp; T_z &amp; 1\end{bmatrix}$，为什么这跟我们推导的矩阵不一样？其实在OpenGL里，矩阵元素排序采用的是以列为主的顺序（column major order），我们不难发现，其实这个矩阵跟我们上面推导的矩阵是互为转置的关系，假设我们推导的矩阵为M，OpenGL的矩阵为A，那么$M = A^T$。</p>
 <h3 id="2-缩放"><a href="#2-缩放" class="headerlink" title="2.缩放"></a>2.缩放</h3><h4 id="2-1-推导"><a href="#2-1-推导" class="headerlink" title="2.1 推导"></a>2.1 推导</h4><p>如图，向量$\vec{OP}$在x和y方向上都放大了1.5倍就得到了向量 $\vec{OP_1}$，坐标从(2,1)变换成了(3, 1.5)。这种缩放方式比较符合我们常识中的「放大」或「缩小」，即各个维度上都「放大」或「缩小」相同的倍数。如果在3D空间中的一个对象的各个顶点都「放大」或「缩小」相同的倍数，那么这个3D对象本身就「放大」或「缩小」了相应的倍数。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_scale_1.png" alt="向量缩放" title="">
-                </div>
-                <div class="image-caption">向量缩放</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_scale_1.png" alt="向量缩放"></p>
 <p>但是，OpenGL ES里的缩放变换可以表达更一般的情形，也就是各个维度上缩放不同的倍数。还是以上图2维向量为例，向量$\vec{OP}$在$x$方向上缩小为原来的0.5倍，在$y$方向上放大为原来的2倍，就得到了向量 $\vec{OP_2}$，坐标从(2, 1)变换成了(1, 2)，这也是一种缩放变换。</p>
 <p>从上面的例子可见，缩放变换就是把各个维度的坐标分别「放大」或「缩小」一个倍数。扩展到3D空间，仍然使用4维的齐次坐标，缩放操作用矩阵乘法可以写成：</p>
 <p>$\begin{bmatrix}S_x &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; S_y &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; S_z &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix} \begin{bmatrix}x \\ y \\ z \\ 1\end{bmatrix} = \begin{bmatrix}S_xx\\ S_yy \\ S_zz\\ 1\end{bmatrix}$</p>
@@ -310,21 +274,8 @@
 <h3 id="3-旋转"><a href="#3-旋转" class="headerlink" title="3.旋转"></a>3.旋转</h3><h4 id="3-1-围绕坐标轴旋转"><a href="#3-1-围绕坐标轴旋转" class="headerlink" title="3.1 围绕坐标轴旋转"></a>3.1 围绕坐标轴旋转</h4><p>旋转是相对平移和缩放来说，比较复杂的一种线性变换。在OpenGL ES中，计算旋转矩阵一般是通过一下语句实现：</p>
 <p><code>Matrix.rotateM(matrix: mMVPMatrix, offset: 0, angle: 30f, x: 0f, y: 0f, z: 1f);</code></p>
 <p>上面的语句就是计算围绕向量$[0, 0, 1]$旋转30度的变换矩阵，也就是围绕$Z$轴旋转30度。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/point_rotation.jpg" alt="PointRotation" title="">
-                </div>
-                <div class="image-caption">PointRotation</div>
-            </figure>
-<p>从上面的示意图我们可以看出，点$P(x, y, z)$围绕$Z$轴旋转θ度得到点$P’(x’, y’, z)$，$z$坐标没有任何变化，我们可以把点$P$和点$P’$投影到$X$-$Y$平面上，得到点$Q$和点$Q’$，$\vec{OQ}$和$\vec{OQ’}$的夹角也等于$θ$。这样，我们就把问题简化成平面几何了：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/point_rotation_xy_conduct.jpg" alt="PointRotationXYConduct" title="">
-                </div>
-                <div class="image-caption">PointRotationXYConduct</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/point_rotation.jpg" alt="PointRotation"><br>从上面的示意图我们可以看出，点$P(x, y, z)$围绕$Z$轴旋转θ度得到点$P’(x’, y’, z)$，$z$坐标没有任何变化，我们可以把点$P$和点$P’$投影到$X$-$Y$平面上，得到点$Q$和点$Q’$，$\vec{OQ}$和$\vec{OQ’}$的夹角也等于$θ$。这样，我们就把问题简化成平面几何了：</p>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/point_rotation_xy_conduct.jpg" alt="PointRotationXYConduct"></p>
 <p>我们通过简单的几何知识可以计算出旋转后的P’坐标与P坐标的关系，计算结果显示，x’和y’都是x和y的线性组合，因此我们可以通过矩阵来表示这个变换：</p>
 <p>$M \cdot \begin{bmatrix}x \\ y \\ z \\ 1\end{bmatrix} = \begin{bmatrix}xcosθ + ysinθ \\ -xsinθ + ycosθ \\ z \\ 1\end{bmatrix} $</p>
 <p>$M = \begin{bmatrix}cosθ &amp; sinθ &amp; 0 &amp; 0 \\ -sinθ &amp; cosθ &amp; 0 &amp; 0 \\ 0 &amp; 0  &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix}$</p>
@@ -337,13 +288,7 @@
 <p>$M = \begin{bmatrix}x^2(1-cosθ) + cosθ &amp; xy(1-cosθ)-zsinθ &amp; xz(1-cosθ) + ysinθ &amp; 0 \\ xy(1-cosθ) + zsinθ &amp; y^2(1-cosθ) + cosθ &amp; yz(1-cosθ)-xsinθ &amp; 0 \\ zx(1-cosθ)-ysinθ &amp; yz(1-cosθ)+xsinθ &amp; z^2(1-cosθ)+cosθ &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1\end{bmatrix}$</p>
 <p>我们不难看出，得到这个变换矩阵的过程会比较繁琐，但是没关系，刘老师会尽可能把推导过程讲诉清楚。</p>
 <p>假设我们要对三维空间里的向量$\vec{v}$围绕某个单位向量（向量的模为1）$\vec{r}$旋转$θ$度，可以给出这样的图像：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_1.jpg" alt="VectorRotationPic1" title="">
-                </div>
-                <div class="image-caption">VectorRotationPic1</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_1.jpg" alt="VectorRotationPic1"></p>
 <p>首先，我们把向量$\vec{v}$分解为向量$\vec{v_{||}}$的和向量$\vec{v_⊥}$的和：</p>
 <p>$\vec{v} = \vec{v_{||}} + \vec{v_⊥}$                               _式1_</p>
 <p>其中$\vec{v_{||}}$是与$\vec{r}$平行的向量，$\vec{v_⊥}$是与$\vec{r}$互相垂直的向量。利用向量点积的几何意义，我们可以得出$\vec{v_{||}}$的表达式：</p>
@@ -357,13 +302,7 @@
 <p>$= \vec{v_{||}} + T(\vec{v_⊥})$                         _式4_</p>
 <p>计算变换矩阵的重点就在于计算$T(\vec{v_⊥})$。</p>
 <p>我们焦点放到$\vec{v_⊥}$所在的平面上</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_2.jpg" alt="VectorRotationGeneral2" title="">
-                </div>
-                <div class="image-caption">VectorRotationGeneral2</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_2.jpg" alt="VectorRotationGeneral2"></p>
 <p>我们作一个辅助向量</p>
 <p>$\vec{w} = \vec{r} × \vec{v_{⊥}}$</p>
 <p>$= \vec{r} × \vec{v}$</p>
@@ -373,25 +312,13 @@
 <p>$ = |\vec{v_{⊥}}| \cdot sin90$                               因为$\vec{r}$是单位向量，模为1</p>
 <p>$= |\vec{v_{⊥}}|$                                             sin90 = 1</p>
 <p>$|\vec{r} × \vec{v}| = |\vec{r}| \cdot |\vec{v}| \cdot sin\psi$</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_1.jpg" alt="VectorRotationPic1" title="">
-                </div>
-                <div class="image-caption">VectorRotationPic1</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_1.jpg" alt="VectorRotationPic1"></p>
 <p>可以看出，$|\vec{v}| \cdot sin\psi = |\vec{v_{⊥}}|$</p>
 <p>所以$|\vec{r} × \vec{v}| = |\vec{r}| \cdot |\vec{v}| \cdot sin\psi = |{\vec{v_{⊥}}}|$</p>
 <p>因此</p>
 <p>$\vec{w} = \vec{r} × \vec{v_{⊥}} = \vec{r} × \vec{v}$                         _式5_</p>
 <p>回到$\vec{v_{⊥}}$所在平面的向量分解示意图：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_2.jpg" alt="VectorRotationGeneral2" title="">
-                </div>
-                <div class="image-caption">VectorRotationGeneral2</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/vector_rotation_general_pic_2.jpg" alt="VectorRotationGeneral2"></p>
 <p>我们可以得出</p>
 <p>$T(\vec{v_{⊥}}) = cosθ\vec{v_{⊥}} + sinθ\vec{w}$</p>
 <p>$= cosθ\vec{v_{⊥}} + sinθ(\vec{r} × \vec{v})$                 _式6_</p>
@@ -433,13 +360,7 @@
 <p>从几何层面来说，透视投影就是把欧几里德空间里的点映射到一个新的空间的手段。</p>
 <h3 id="2-为什么要透视投影"><a href="#2-为什么要透视投影" class="headerlink" title="2. 为什么要透视投影"></a>2. 为什么要透视投影</h3><p>为什么我们需要透视投影？我们可以反过来想这个问题：为什么不用欧几里德三维空间？欧几里德三维空间里每个点都可以找到它们的坐标，而且非常直观，小孩子都能直接利用坐标来作图，为什么不用呢？</p>
 <p>原因很简单，欧几里德是一个“理想化”的空间，在这个空间里，平行的线是永远不会相交的，这违背了人类视觉的观感（见下图）。</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/railway.jpg" alt="Railway" title="">
-                </div>
-                <div class="image-caption">Railway</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/railway.jpg" alt="Railway"></p>
 <h3 id="3-透视投影数学原理"><a href="#3-透视投影数学原理" class="headerlink" title="3. 透视投影数学原理"></a>3. 透视投影数学原理</h3><h4 id="3-1-映射的概念"><a href="#3-1-映射的概念" class="headerlink" title="3.1 映射的概念"></a>3.1 映射的概念</h4><p>透视投影在数学层面上，就是坐标点的映射，映射的基本思想很简单：</p>
 <p>给定$x\in[a, b]$，找$y\in[c, d]$，使得$\frac{x-a}{b-a} = \frac{y-c}{d-c}$</p>
 <p>若$x\notin[a, b]$，则$y\notin[c, d]$。</p>
@@ -447,21 +368,9 @@
 <li>用透视变换矩阵把顶点从视锥体中变换到Clip Space中</li>
 <li>规则观察体CVV(Canonical View Volume)裁剪后进行透视除法（后边会解释）</li>
 </ul>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_view_frustum.png" alt="PerspectiveProjectionViewFrustum" title="">
-                </div>
-                <div class="image-caption">PerspectiveProjectionViewFrustum</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_view_frustum.png" alt="PerspectiveProjectionViewFrustum"></p>
 <h4 id="3-3-求透视变换矩阵"><a href="#3-3-求透视变换矩阵" class="headerlink" title="3.3 求透视变换矩阵"></a>3.3 求透视变换矩阵</h4><p>又到了令人紧张又兴奋的求解部分了，我们慢慢来，先观察X-Z平面：</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_xz.png" alt="PerspectiveProjectionXZ" title="">
-                </div>
-                <div class="image-caption">PerspectiveProjectionXZ</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_xz.png" alt="PerspectiveProjectionXZ"></p>
 <p>根据相似三角形的性质，我们可以得出</p>
 <p>$\frac{x}{x’} = \frac{z}{z’} = \frac{x}{-N}$</p>
 <p>$x’ = -N \cdot \frac{x}{z}$</p>
@@ -508,21 +417,9 @@
 <p>这个矩阵$M$就是我们想要的透视变换矩阵。</p>
 <p>最后我们收一下尾，算一下$left$, $right$, $top$和$bottom$的值。</p>
 <p>我们可以在$X$-$Z$平面计算视锥体</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_xz_frustum.jpg" alt="PerspectiveProjectionXZFrustum" title="">
-                </div>
-                <div class="image-caption">PerspectiveProjectionXZFrustum</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_xz_frustum.jpg" alt="PerspectiveProjectionXZFrustum"></p>
 <p>也可以在$Y$-$Z$平面计算视锥体</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_yz_frustum.jpg" alt="PerspectiveProjectionYZFrustum" title="">
-                </div>
-                <div class="image-caption">PerspectiveProjectionYZFrustum</div>
-            </figure>
+<p><img src="http://ovl0w8qm7.bkt.clouddn.com/perspective_projection_yz_frustum.jpg" alt="PerspectiveProjectionYZFrustum"></p>
 <p>一般建议用$Y$-$Z$平面来计算，因为少一个除法，计算效率会高一点。</p>
 <p>至此，透视变换矩阵计算完毕。</p>
 <h3 id="4-OpenGL-ES计算透视投影矩阵"><a href="#4-OpenGL-ES计算透视投影矩阵" class="headerlink" title="4. OpenGL ES计算透视投影矩阵"></a>4. OpenGL ES计算透视投影矩阵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算透视矩阵，在y方向上的field of view角度为45度，aspect是宽高比，近平面距离0.1f，远平面距离100f</span></span><br><span class="line">Matrix.perspectiveM(m: matrix, offset: <span class="number">0</span>, fovy: <span class="number">45f</span>, aspect: width/(<span class="keyword">float</span>) height, zNear: <span class="number">0.1f</span>, zFar: <span class="number">100f</span>);</span><br></pre></td></tr></table></figure>
@@ -553,7 +450,7 @@
 
 
         
-        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/09/16/1-4-OpenGL线性代数基础与矩阵变换原理/" target="_blank" rel="external">https://tchaikovdriver.github.io/2018/09/16/1-4-OpenGL线性代数基础与矩阵变换原理/</a>
+        Nothing
         
     </div>
     
