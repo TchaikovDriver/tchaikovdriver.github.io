@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>EGL介绍与简单GLSurfaceView实现思路 | Endless August</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="EGL,GLSurfaceView,Android,GLThread">
+    <meta name="description" content="EGL介绍与简单GLSurfaceView实现思路[TOC] 前言本文刘老师会讲GLView或者说GLSurfaceView的简单实现，旨在让大家在使用GLSurfaceView时能明白Android在OpenGL ES的使用这块为大家提供了多大的便利性，同时也能让大家了解，一个标准的GL环境是怎么创建的，GLSurfaceView总体的执行逻辑是怎么样的。 EGL什么是EGL我们首先来看一下什么">
+<meta name="keywords" content="EGL,GLSurfaceView,Android,GLThread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EGL介绍与简单GLSurfaceView实现思路">
+<meta property="og:url" content="https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/index.html">
+<meta property="og:site_name" content="Endless August">
+<meta property="og:description" content="EGL介绍与简单GLSurfaceView实现思路[TOC] 前言本文刘老师会讲GLView或者说GLSurfaceView的简单实现，旨在让大家在使用GLSurfaceView时能明白Android在OpenGL ES的使用这块为大家提供了多大的便利性，同时也能让大家了解，一个标准的GL环境是怎么创建的，GLSurfaceView总体的执行逻辑是怎么样的。 EGL什么是EGL我们首先来看一下什么">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/egl_framework.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/egl_framework_02.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/egl_command.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/egl_swap_buffer.png">
+<meta property="og:image" content="http://ovl0w8qm7.bkt.clouddn.com/GLView_render_process.png">
+<meta property="og:updated_time" content="2018-10-02T17:42:35.546Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EGL介绍与简单GLSurfaceView实现思路">
+<meta name="twitter:description" content="EGL介绍与简单GLSurfaceView实现思路[TOC] 前言本文刘老师会讲GLView或者说GLSurfaceView的简单实现，旨在让大家在使用GLSurfaceView时能明白Android在OpenGL ES的使用这块为大家提供了多大的便利性，同时也能让大家了解，一个标准的GL环境是怎么创建的，GLSurfaceView总体的执行逻辑是怎么样的。 EGL什么是EGL我们首先来看一下什么">
+<meta name="twitter:image" content="http://ovl0w8qm7.bkt.clouddn.com/egl_framework.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Endless August" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">TchaikovDriver</h5>
+          <a href="mailto:c2359438@qq.com" title="c2359438@qq.com" class="mail">c2359438@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/TchaikovDriver" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">EGL介绍与简单GLSurfaceView实现思路</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">EGL介绍与简单GLSurfaceView实现思路</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-10-02T17:38:36.000Z" itemprop="datePublished" class="page-time">
+  2018-10-03
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#EGL介绍与简单GLSurfaceView实现思路"><span class="post-toc-number">1.</span> <span class="post-toc-text">EGL介绍与简单GLSurfaceView实现思路</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#EGL"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">EGL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#什么是EGL"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">什么是EGL</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为什么用EGL"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">为什么用EGL</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#EGL关键数据类型"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">EGL关键数据类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#EGL的基础用法"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">EGL的基础用法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#如何选择Surface"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">如何选择Surface</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基础API说明"><span class="post-toc-number">1.2.6.</span> <span class="post-toc-text">基础API说明</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#eglSwapBuffers流程"><span class="post-toc-number">1.2.7.</span> <span class="post-toc-text">eglSwapBuffers流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#渲染流程"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">渲染流程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#示例代码"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">示例代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关文件"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">相关文件</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-EGL介绍与简单GLSurfaceView实现思路"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">EGL介绍与简单GLSurfaceView实现思路</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-10-03 01:38:36" datetime="2018-10-02T17:38:36.000Z"  itemprop="datePublished">2018-10-03</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="EGL介绍与简单GLSurfaceView实现思路"><a href="#EGL介绍与简单GLSurfaceView实现思路" class="headerlink" title="EGL介绍与简单GLSurfaceView实现思路"></a>EGL介绍与简单GLSurfaceView实现思路</h1><p>[TOC]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文刘老师会讲GLView或者说GLSurfaceView的简单实现，旨在让大家在使用GLSurfaceView时能明白Android在OpenGL ES的使用这块为大家提供了多大的便利性，同时也能让大家了解，一个标准的GL环境是怎么创建的，GLSurfaceView总体的执行逻辑是怎么样的。</p>
+<h2 id="EGL"><a href="#EGL" class="headerlink" title="EGL"></a>EGL</h2><h3 id="什么是EGL"><a href="#什么是EGL" class="headerlink" title="什么是EGL"></a>什么是EGL</h3><p>我们首先来看一下什么是EGL。EGL是一个介于Khronos（制定并发布图形API的组织）渲染API和native平台底层Window系统的中间层接口，它负责图像Context的管理、Surface/渲染buffer的创建、绑定以及rendering synchronization等事情。</p>
+<p>下图是EGL中间层的示意图。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/egl_framework.png" alt="EGL_Framework" title="">
+                </div>
+                <div class="image-caption">EGL_Framework</div>
+            </figure>
+<h3 id="为什么用EGL"><a href="#为什么用EGL" class="headerlink" title="为什么用EGL"></a>为什么用EGL</h3><p>我们先从OpenGL的绘制条件讲起。OpenGL ES的运行需要一个rendering context和一个drawing surface。其中rendering context会存储OpenGL的状态信息；drawing surface是基本图元绘制的地方，它还指定了渲染时使用哪种类型的buffer（color buffer, depth buffer, stencil buffer)）。</p>
+<p>EGL就提供了一套创建可给OpenGL等渲染API在上边绘制、创建context的surface的机制。</p>
+<p>这套机制具体可以提供以下的功能：</p>
+<ul>
+<li>可以跟设备native windowing system交互的EGLDisplay</li>
+<li>查询Drawing surface相关配置信息的接口(EGL14.eglGetConfigs, EGL14.eglGetConfigAttrib等)</li>
+<li>同步不同渲染API的渲染结果（如OpenGL 和 OpenVG混合渲染的场景）</li>
+<li>管理渲染资源（如纹理映射）</li>
+</ul>
+<p>另一方面，OpenGL是一套跨平台的图形API，本着单一责任原则，OpenGL只提供绘制图形的功能，因此，我们还需要一套跨平台的控制native显示设备的接口，这套接口就是EGL。</p>
+<h3 id="EGL关键数据类型"><a href="#EGL关键数据类型" class="headerlink" title="EGL关键数据类型"></a>EGL关键数据类型</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/egl_framework_02.png" alt="EGL_Framework_02" title="">
+                </div>
+                <div class="image-caption">EGL_Framework_02</div>
+            </figure>
+<ul>
+<li><strong>EGLDisplay</strong>: 系统显示 ID 或句柄，是对显示设备的抽象，可以理解为一个前端的显示窗口</li>
+<li><strong>EGLContext</strong>: OpenGL ES 图形上下文，它代表了OpenGL状态机，如果没有它，OpenGL指令就没有执行的环境。</li>
+<li><strong>EGLSurface</strong>: 系统窗口或 FrameBuffer (包含Color Buffer, Stencil Buffer, Depth Buffer) 句柄 ，可以理解为一个后端的渲染目标窗口。</li>
+<li><strong>EGLConfig</strong>: 创建<strong>EGLContext</strong>和<strong>EGLSurface</strong>所需要的配置，一般我们会在这里配置<strong>EGLSurface</strong> Color Buffer里RGBA各个颜色值所占的位数、Stencil Buffer和Depth Buffer的位数，以及指定能绘制到surface的渲染api（OpenGL ES, OpenVG等）。</li>
+</ul>
+<h3 id="EGL的基础用法"><a href="#EGL的基础用法" class="headerlink" title="EGL的基础用法"></a>EGL的基础用法</h3><ol>
+<li>获取与app或者显示屏关联的display</li>
+<li>初始化display</li>
+<li>创建surface</li>
+<li>创建context并与display关联起来，这个context会保存OpenGL的状态</li>
+<li>将context “make current”（EGL14.makeCurrent)，后续的OpenGL操作将影响当前context的状态</li>
+<li>使用OpenGL渲染</li>
+<li>调用flush或者swap buffers，EGL就会告诉系统或者native window system展示渲染好的surface</li>
+</ol>
+<p>下图是EGLContext, EGLDisplay, EGLConfig和EGLSurface涉及的命令</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/egl_command.png" alt="EGL_Command" title="">
+                </div>
+                <div class="image-caption">EGL_Command</div>
+            </figure>
+<h3 id="如何选择Surface"><a href="#如何选择Surface" class="headerlink" title="如何选择Surface"></a>如何选择Surface</h3><p>Surface实际上就是一个FrameBuffer，也就是渲染的地方。</p>
+<ul>
+<li>上屏渲染: EGL Window. 使用 <code>eglCreateWindowSurface</code>创建。在Android中eglCreateWindowSurface接口所需的参数之一EGLNativeWindow，一般建议用SurfaceTexture，至于SurfaceTexture，可以在SurfaceView或者TextureView中获取。</li>
+<li>离屏渲染: EGL Pbuffers (Pixel buffer). 使用<code>eglCreatePbufferSurface</code>创建。还有一个是Pixmap，PixmapSurface上绘制的图会保存在内存中，且跨平台支持并不好，而PbufferSurface绘制的图是保存在显存中的，一般建议用PbufferSurface。</li>
+</ul>
+<h3 id="基础API说明"><a href="#基础API说明" class="headerlink" title="基础API说明"></a>基础API说明</h3><p>以下函数来自类 <code>EGL14</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">api</th>
+<th style="text-align:left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">EGLDisplay eglGetDisplay(int id)</td>
+<td style="text-align:left">id决定了我们能获取到什么display，默认用<code>EGL_DEFAULT_DISPLAY</code>。如果返回结果不是<code>EGL_NO_DISPLAY</code>的话，则表示获取成功。</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean eglInitialize(EGLDisplay dpy, int[] major, int majorOffset, int[] minor, int minorOffset)</td>
+<td style="text-align:left">初始化<code>EGLDisplay</code>，并返回初始化成功或者失败，同时当前设备EGL的最小和最大版本会保存到major和minor中。如果初始化失败的话，可以通过<code>eglGetError()</code>获取error code</td>
+</tr>
+<tr>
+<td style="text-align:left">int eglGetError()</td>
+<td style="text-align:left">获取egl error code，error coder 的声明可以看<code>EGL14</code>，一般看到的有<code>EGL_BAD_CONTEXT</code>, <code>EGL_BAD_DISPLAY</code>等等。这些error code的信息可以到<a href="https://www.khronos.org/registry/EGL/specs/eglspec.1.4.pdf" target="_blank" rel="noopener">https://www.khronos.org/registry/EGL/specs/eglspec.1.4.pdf</a> 查阅。</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean eglChooseConfig(EGLDisplay dpy,     int[] attrib_list, int attrib_listOffset,     EGLConfig[] configs, int configsOffset, int config_size, int[] num_config, int num_configOffset)</td>
+<td style="text-align:left">让EGL在我们指定的attribute list里，匹配出若干个符合我们需求的<code>EGLConfig</code>，匹配结果保存在configs里，结果数量保存在 num_conifg里。attribute可以在<a href="https://www.slideshare.net/Khronos_Group/egl-11" target="_blank" rel="noopener">https://www.slideshare.net/Khronos_Group/egl-11</a> 查阅。</td>
+</tr>
+<tr>
+<td style="text-align:left">EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, int[] surfaceAttrib, int attribOffset)</td>
+<td style="text-align:left">创建离屏渲染用的<code>EGLSurface</code>，surfaceAttribute一般传<code>EGL_WIDTH</code>, <code>EGL_HEIGHT</code>, <code>EGL_RENDER_BUFFER</code>等值。如果返回的不是<code>EGL_NO_SURFACE</code>的话表示创建成功。</td>
+</tr>
+<tr>
+<td style="text-align:left">EGLContext eglCreateContext(EGLDisplay dpy,  EGLConfig config, EGLContext sharedContext, int[] attrib, int attribOffset)</td>
+<td style="text-align:left">创建<code>EGLContext</code>。如果不是创建共享<code>EGLContext</code>的话，sharedContext传<code>EGL_NO_CONTEXT</code>即可；attrib只接受一个参数：<code>EGL_CONTEXT_CLIENT_VERSION</code>，表示OpenGL ES Context的版本号。如果是OpenGL ES2就传2，3就传3。</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean eglQueryContext(EGLDisplay dpy,     EGLContext ctx, int attribute, int[] value,     int offset);</td>
+<td style="text-align:left">查询<code>EGLContext</code>的属性值，这里只能查<code>EGL_CONTEXT_CLIENT_VERSION</code>，也就是ctx所用的OpenGL ES版本。</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean eglMakeCurrent(EGLDisplay dpy,     EGLSurface draw, EGLSurface read, EGLContext ctx )</td>
+<td style="text-align:left">将<code>EGLContext</code>和<code>EGLSurface</code>关联起来</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean eglSwapBuffers(EGLDisplay dpy,     EGLSurface surface )</td>
+<td style="text-align:left">这个函数的命名来自于传统的屏幕front和back buffer swap更新机制。如果surface是window surface，那么这个函数会把color buffer更新到native window上（即显示渲染结果）；如果是pixel buffer或者pixmap的话，eglSwapBuffers没有效果，你知道吧。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="eglSwapBuffers流程"><a href="#eglSwapBuffers流程" class="headerlink" title="eglSwapBuffers流程"></a>eglSwapBuffers流程</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/egl_swap_buffer.png" alt="egl_swap_buffer" title="">
+                </div>
+                <div class="image-caption">egl_swap_buffer</div>
+            </figure>
+<p>利用双缓冲进行Swap的时候，Display和Surface进行实际意义上的地址交换，来实现eglSwapBuffers的标准， 如上图的右侧所示。 上图的左侧表示，单缓冲Framebuffer的形式，Surface永远都在后端， 显示的永远是Display，在GPU出现后已不使用。</p>
+<p>在Android平台上，<code>EGLSurface</code>其实代表了一个从NativeWindow 申请到的一个Buffer（Dequeue操作）。当调用eglSwapBuffers时，对于一般应用窗口而言，NativeWindow将该Surface的Buffer 提交回去给SurfaceFlinger（Queue操作)，然后又重新从NativeWindow中重新Dequeue出来一个新的Buffer给eglSurface。而eglDisplay并不代表实际的意义。我们只是从接口上感觉是，surface和display进行了交换。</p>
+<h2 id="渲染流程"><a href="#渲染流程" class="headerlink" title="渲染流程"></a>渲染流程</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://ovl0w8qm7.bkt.clouddn.com/GLView_render_process.png" alt="egl_drawing_process" title="">
+                </div>
+                <div class="image-caption">egl_drawing_process</div>
+            </figure>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p>详见<a href="https://github.com/TchaikovDriver/GLViewDemo" target="_blank" rel="noopener">GLViewDemo</a> master分支的<code>GLThread</code>实现。</p>
+<h2 id="相关文件"><a href="#相关文件" class="headerlink" title="相关文件"></a>相关文件</h2><p>原本<strong>Khronos</strong>官网上是有EGL 1.4的specification，链接如下：<br><a href="https://www.khronos.org/registry/EGL/specs/eglspec.1.4.pdf" target="_blank" rel="noopener">https://www.khronos.org/registry/EGL/specs/eglspec.1.4.pdf</a><br>但是不知道为什么有时候上不了，上不了的同学可以去<a href="https://github.com/TchaikovDriver/PublicFiles/blob/master/EGL/eglspec.1.4.pdf" target="_blank" rel="noopener">这里</a>下载。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-10-02T17:42:35.546Z" itemprop="dateUpdated">2018-10-03 01:42:35</time>
+</span><br>
+
+
+        
+        要不打点钱？
+        
+    </div>
+    
+    <footer>
+        <a href="https://tchaikovdriver.github.io">
+            <img src="/img/avatar.jpg" alt="TchaikovDriver">
+            TchaikovDriver
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EGL/">EGL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GLSurfaceView/">GLSurfaceView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GLThread/">GLThread</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&title=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&title=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/09/16/1-6-OpenGL-Camera/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">1.6 OpenGL Camera</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "0R1JlgFxT9U3eX97jQ2tgvT8-gzGzoHsz",
+            appKey: "oEGa0EssP35qyhgWLYIaE4Qs",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老哥
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>TchaikovDriver &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&title=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&pic=https://tchaikovdriver.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&title=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&source=None" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《EGL介绍与简单GLSurfaceView实现思路》 — Endless August&url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/&via=https://tchaikovdriver.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://tchaikovdriver.github.io/2018/10/03/EGL介绍与简单GLSurfaceView实现思路/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADMUlEQVR42u3aQY7iQAwFUO5/aUaa7TTh2056iHlZIaAr9YLUlr/r8Yiv59/r1etXn75aIVnn3/ePP31ccWFjY2PfhP08vI63eLyh49fHDyV5rK8+TXaIjY2NvY+dF638lsn7eZGrFtc362BjY2N/JTspckmDkT+O3h6wsbGxsavtRLVcTb7z3+o2NjY29sez8+KUBzd58DQZGFyepWFjY2N/PHs+6P2c178638bGxsb+APazdc3XnIxs5wpsbGzsTezJEcZk9Dt/HGcd7nkkf4CNjY19c3b1aE6+Wh425aRq2XtZwLCxsbFvzs4P2SRtQ96cTApVtVj+sBo2Njb2l7GrLUT1USZh02Q8HMVJ2NjY2CvYvUioWt4mpbG3TuGMEjY2NvZt2XnzkJS0HqAaGPUGGNjY2Ni72Ql1HuvMBwZV9g+rYWNjY69m5//hq3FPr7Gpxk/Rz4aNjY29lN2L7KujhUnQX/153hzZwcbGxl7Bnh+d6YU7PVI1ciqXMWxsbOwbsnsRfL65+Tg57x0KPx42Njb2InYSrFc3XQ2VerFRNdiKhsTY2NjYN2RXn02y3bNGC9HItvhNbGxs7K3syfGa6ubyR5aQqvfFxsbG3seu3uCK8CiJq+YDA2xsbOyt7F6h6gVPvcM9l6yDjY2NvYjdO5rTG9nmBeaKFujl+9jY2Nir2ZNhQFJsegeAkr+K+i1sbGzsRew8mp/w8tWqazYfJTY2NvYKdrUxSCKbhJG3N5OBwZv5NjY2NvYidlIYJgdxqoFU3iw1CyQ2Njb2Inay6d6otTda6BWw6vgBGxsbex+7ekAn38R1IVT1NTY2Nvb3sPMGIImB8hC/WkrzEts8qYSNjY19Q3YPOQmh8k1HTUUQM2FjY2PvY5871k2akLxtqMZYhYEENjY29iJ2b8habULyKpoHW704CRsbG3sru1q0yv1NvEIeCRUGAMcpGjY2NvYi9uQ2k00kZa86GI5+EmxsbOwvZs8Ht3njMVn5TRnDxsbG/kr2WYWnmnhVD3SeXMCwsbGxb8KeH3asbqJ3ZOesATA2Njb2JvZk0NsbA+TjhN4Rot4AAxsbG/uG7D+DbNSYBMNyTgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
